@@ -1,6 +1,6 @@
 {
   "name": "aurelia-path",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Utilities for path manipulation.",
   "keywords": [
     "aurelia",
@@ -15,7 +15,7 @@
   "main": "dist/commonjs/index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/aurelia/path"
+    "url": "http://github.com/aurelia/path"
   },
   "jspm": {
     "directories": {
