@@ -8,6 +8,12 @@ This library is part of the [Aurelia](http://www.aurelia.io/) platform and conta
 
 This library has **NO** external dependencies.
 
+## Used By
+
+* [aurelia-http-client](https://github.com/aurelia/http-client)
+* [aurelia-loader-systemjs](https://github.com/aurelia/loader-systemjs)
+* [aurelia-templating](https://github.com/aurelia/templating)
+
 ## Platform Support
 
 This library can be used in the **browser** as well as on the **server**.
