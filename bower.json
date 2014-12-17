@@ -1,8 +1,16 @@
 {
   "name": "aurelia-path",
   "version": "0.2.1",
+  "description": "Utilities for path manipulation.",
   "keywords": [
     "aurelia",
     "path"
-  ]
+  ],
+  "homepage": "http://aurelia.io",
+  "license": "MIT",
+  "authors": ["Rob Eisenberg <rob@bluespire.com> (http://robeisenberg.com/)"],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/aurelia/path"
+  }
 }
