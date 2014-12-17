@@ -1,6 +1,6 @@
 {
   "name": "aurelia-path",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Utilities for path manipulation.",
   "keywords": [
     "aurelia",
@@ -41,17 +41,32 @@
     "object.assign": "^1.0.3",
     "run-sequence": "^1.0.2"
   },
-  "aurelia":{
-    "usedBy":[
+  "aurelia": {
+    "usedBy": [
       "aurelia-http-client",
       "aurelia-loader-systemjs",
       "aurelia-templating"
     ],
-    "documentation":{
-      "links":[
-        { "rel":"license", "mediaType":"text/plain", "title":"The MIT License (MIT)", "href":"LICENSE" },
-        { "rel":"describedby", "mediaType":"application/yuidoc+json", "title":"API", "href":"doc/api.json" },
-        { "rel":"version-history", "mediaType":"text/markdown", "title":"Change Log", "href":"doc/CHANGELOG.md" }
+    "documentation": {
+      "links": [
+        {
+          "rel": "license",
+          "mediaType": "text/plain",
+          "title": "The MIT License (MIT)",
+          "href": "LICENSE"
+        },
+        {
+          "rel": "describedby",
+          "mediaType": "application/yuidoc+json",
+          "title": "API",
+          "href": "doc/api.json"
+        },
+        {
+          "rel": "version-history",
+          "mediaType": "text/markdown",
+          "title": "Change Log",
+          "href": "doc/CHANGELOG.md"
+        }
       ]
     }
   }
