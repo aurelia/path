@@ -1,8 +1,6 @@
 # Acknowledgements
 
-The `normalize` function in this library was adapted from the internals of [http://requirejs.org/](http://requirejs.org/). Much thanks goes to the authors who worked out this algorithm. Below is the required notice from the original library.
-
-Also, the `join` function comes from [this gist](https://gist.github.com/creationix/7435851).
+The `relativeToFile` function in this library was adapted from the internals of [http://requirejs.org/](http://requirejs.org/). Much thanks goes to the authors who worked out this algorithm. Below is the required notice from the original library.
 
 ---
 
