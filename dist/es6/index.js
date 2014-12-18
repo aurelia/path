@@ -21,21 +21,21 @@ function trimDots(ary) {
   }
 }
 
-export function normalize(name, baseName){
+export function relativeToFile(name, file){
   var lastIndex,
       normalizedBaseParts,
-      baseParts = (baseName && baseName.split('/'));
+      fileParts = (file && file.split('/'));
 
   name = name.trim();
   name = name.split('/');
 
-  if (name[0].charAt(0) === '.' && baseParts) {
-      //Convert baseName to array, and lop off the last part,
-      //so that . matches that 'directory' and not name of the baseName's
-      //module. For instance, baseName of 'one/two/three', maps to
+  if (name[0].charAt(0) === '.' && fileParts) {
+      //Convert file to array, and lop off the last part,
+      //so that . matches that 'directory' and not name of the file's
+      //module. For instance, file of 'one/two/three', maps to
       //'one/two/three.js', but we want the directory, 'one/two' for
       //this normalization.
-      normalizedBaseParts = baseParts.slice(0, baseParts.length - 1);
+      normalizedBaseParts = fileParts.slice(0, fileParts.length - 1);
       name = normalizedBaseParts.concat(name);
   }
 
@@ -44,29 +44,40 @@ export function normalize(name, baseName){
   return name.join('/');
 }
 
-// Joins path segments.  Preserves initial "/" and resolves ".." and "."
-// Does not support using ".." to go above/outside the root.
-// This means that join("foo", "../../bar") will not resolve to "../bar"
-export function join(/* path segments */) {
-  // Split the inputs into a list of path commands.
-  var parts = [];
-  for (var i = 0, l = arguments.length; i < l; i++) {
-    parts = parts.concat(arguments[i].split("/"));
+export function join(path1, path2) {
+  var url1, url2, url3;
+
+  if(!path1){
+    return path2;
   }
-  // Interpret the path commands to get the new resolved path.
-  var newParts = [];
-  for (i = 0, l = parts.length; i < l; i++) {
-    var part = parts[i];
-    // Remove leading and trailing slashes
-    // Also remove "." segments
-    if (!part || part === ".") continue;
-    // Interpret ".." to pop the last segment
-    if (part === "..") newParts.pop();
-    // Push new path segments.
-    else newParts.push(part);
+
+  if(!path2){
+    return path1;
   }
-  // Preserve the initial slash if there was one.
-  if (parts[0] === "") newParts.unshift("");
-  // Turn back into a single string path.
-  return newParts.join("/") || (newParts.length ? "/" : ".");
+
+  url1 = path1.split('/');
+  url2 = path2.split('/');
+  url3 = [];
+
+  for (var i = 0, l = url1.length; i < l; i ++) {
+    if (url1[i] == '..') {
+      url3.pop();
+    } else if (url1[i] == '.' || url1[i] == '') {
+      continue;
+    } else {
+      url3.push(url1[i]);
+    }
+  }
+
+  for (var i = 0, l = url2.length; i < l; i ++) {
+    if (url2[i] == '..') {
+      url3.pop();
+    } else if (url2[i] == '.' || url2[i] == '') {
+      continue;
+    } else {
+      url3.push(url2[i]);
+    }
+  }
+
+  return url3.join('/').replace(/\:\//g, '://');;
 }

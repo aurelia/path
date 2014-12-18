@@ -1,7 +1,7 @@
 define(["exports"], function (exports) {
   "use strict";
 
-  exports.normalize = normalize;
+  exports.relativeToFile = relativeToFile;
   exports.join = join;
   function trimDots(ary) {
     var i, part;
@@ -21,14 +21,14 @@ define(["exports"], function (exports) {
     }
   }
 
-  function normalize(name, baseName) {
-    var lastIndex, normalizedBaseParts, baseParts = (baseName && baseName.split("/"));
+  function relativeToFile(name, file) {
+    var lastIndex, normalizedBaseParts, fileParts = (file && file.split("/"));
 
     name = name.trim();
     name = name.split("/");
 
-    if (name[0].charAt(0) === "." && baseParts) {
-      normalizedBaseParts = baseParts.slice(0, baseParts.length - 1);
+    if (name[0].charAt(0) === "." && fileParts) {
+      normalizedBaseParts = fileParts.slice(0, fileParts.length - 1);
       name = normalizedBaseParts.concat(name);
     }
 
@@ -37,18 +37,41 @@ define(["exports"], function (exports) {
     return name.join("/");
   }
 
-  function join() {
-    var parts = [];
-    for (var i = 0, l = arguments.length; i < l; i++) {
-      parts = parts.concat(arguments[i].split("/"));
+  function join(path1, path2) {
+    var url1, url2, url3;
+
+    if (!path1) {
+      return path2;
     }
-    var newParts = [];
-    for (i = 0, l = parts.length; i < l; i++) {
-      var part = parts[i];
-      if (!part || part === ".") continue;
-      if (part === "..") newParts.pop();else newParts.push(part);
+
+    if (!path2) {
+      return path1;
     }
-    if (parts[0] === "") newParts.unshift("");
-    return newParts.join("/") || (newParts.length ? "/" : ".");
+
+    url1 = path1.split("/");
+    url2 = path2.split("/");
+    url3 = [];
+
+    for (var i = 0, l = url1.length; i < l; i++) {
+      if (url1[i] == "..") {
+        url3.pop();
+      } else if (url1[i] == "." || url1[i] == "") {
+        continue;
+      } else {
+        url3.push(url1[i]);
+      }
+    }
+
+    for (var i = 0, l = url2.length; i < l; i++) {
+      if (url2[i] == "..") {
+        url3.pop();
+      } else if (url2[i] == "." || url2[i] == "") {
+        continue;
+      } else {
+        url3.push(url2[i]);
+      }
+    }
+
+    return url3.join("/").replace(/\:\//g, "://");;
   }
 });
