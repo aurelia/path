@@ -47,6 +47,7 @@
       "aurelia-http-client",
       "aurelia-loader-systemjs",
       "aurelia-templating",
+      "aurelia-router",
       "aurelia-templating-router"
     ],
     "documentation": {
