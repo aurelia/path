@@ -1,6 +1,6 @@
 function trimDots(ary) {
   var i, part;
-  for (i = 0; i < ary.length; i++) {
+  for (i = 0; i < ary.length; ++i) {
       part = ary[i];
       if (part === '.') {
           ary.splice(i, 1);
@@ -45,7 +45,7 @@ export function relativeToFile(name, file){
 }
 
 export function join(path1, path2) {
-  var url1, url2, url3;
+  var url1, url2, url3, i, ii;
 
   if(!path1){
     return path2;
@@ -59,7 +59,7 @@ export function join(path1, path2) {
   url2 = path2.split('/');
   url3 = [];
 
-  for (var i = 0, l = url1.length; i < l; i ++) {
+  for (i = 0, ii = url1.length; i < ii; ++i) {
     if (url1[i] == '..') {
       url3.pop();
     } else if (url1[i] == '.' || url1[i] == '') {
@@ -69,7 +69,7 @@ export function join(path1, path2) {
     }
   }
 
-  for (var i = 0, l = url2.length; i < l; i ++) {
+  for (i = 0, ii = url2.length; i < ii; ++i) {
     if (url2[i] == '..') {
       url3.pop();
     } else if (url2[i] == '.' || url2[i] == '') {
