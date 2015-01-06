@@ -1,8 +1,10 @@
-define(["exports"], function (exports) {
+System.register([], function (_export) {
   "use strict";
 
-  exports.relativeToFile = relativeToFile;
-  exports.join = join;
+  _export("relativeToFile", relativeToFile);
+
+  _export("join", join);
+
   function trimDots(ary) {
     var i, part;
     for (i = 0; i < ary.length; ++i) {
@@ -74,4 +76,8 @@ define(["exports"], function (exports) {
 
     return url3.join("/").replace(/\:\//g, "://");;
   }
+  return {
+    setters: [],
+    execute: function () {}
+  };
 });

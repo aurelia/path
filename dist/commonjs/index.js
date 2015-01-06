@@ -4,13 +4,13 @@ exports.relativeToFile = relativeToFile;
 exports.join = join;
 function trimDots(ary) {
   var i, part;
-  for (i = 0; i < ary.length; i++) {
+  for (i = 0; i < ary.length; ++i) {
     part = ary[i];
     if (part === ".") {
       ary.splice(i, 1);
       i -= 1;
     } else if (part === "..") {
-      if (i === 0 || (i == 1 && ary[2] === "..") || ary[i - 1] === "..") {
+      if (i === 0 || i == 1 && ary[2] === ".." || ary[i - 1] === "..") {
         continue;
       } else if (i > 0) {
         ary.splice(i - 1, 2);
@@ -21,7 +21,7 @@ function trimDots(ary) {
 }
 
 function relativeToFile(name, file) {
-  var lastIndex, normalizedBaseParts, fileParts = (file && file.split("/"));
+  var lastIndex, normalizedBaseParts, fileParts = file && file.split("/");
 
   name = name.trim();
   name = name.split("/");
@@ -37,7 +37,7 @@ function relativeToFile(name, file) {
 }
 
 function join(path1, path2) {
-  var url1, url2, url3;
+  var url1, url2, url3, i, ii;
 
   if (!path1) {
     return path2;
@@ -51,7 +51,7 @@ function join(path1, path2) {
   url2 = path2.split("/");
   url3 = [];
 
-  for (var i = 0, l = url1.length; i < l; i++) {
+  for (i = 0, ii = url1.length; i < ii; ++i) {
     if (url1[i] == "..") {
       url3.pop();
     } else if (url1[i] == "." || url1[i] == "") {
@@ -61,7 +61,7 @@ function join(path1, path2) {
     }
   }
 
-  for (var i = 0, l = url2.length; i < l; i++) {
+  for (i = 0, ii = url2.length; i < ii; ++i) {
     if (url2[i] == "..") {
       url3.pop();
     } else if (url2[i] == "." || url2[i] == "") {
