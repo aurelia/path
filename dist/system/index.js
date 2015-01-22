@@ -24,7 +24,9 @@ System.register([], function (_export) {
   }
 
   function relativeToFile(name, file) {
-    var lastIndex, normalizedBaseParts, fileParts = file && file.split("/");
+    var lastIndex,
+        normalizedBaseParts,
+        fileParts = file && file.split("/");
 
     name = name.trim();
     name = name.split("/");
