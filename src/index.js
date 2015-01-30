@@ -45,7 +45,7 @@ export function relativeToFile(name, file){
 }
 
 export function join(path1, path2) {
-  var url1, url2, url3, i, ii;
+  var url1, url2, url3, i, ii, urlPrefix;
 
   if(!path1){
     return path2;
@@ -54,6 +54,8 @@ export function join(path1, path2) {
   if(!path2){
     return path1;
   }
+  
+  urlPrefix = path1.indexOf('/') === 0 ? '/' : '';
 
   url1 = path1.split('/');
   url2 = path2.split('/');
@@ -79,5 +81,5 @@ export function join(path1, path2) {
     }
   }
 
-  return url3.join('/').replace(/\:\//g, '://');;
+  return urlPrefix + url3.join('/').replace(/\:\//g, '://');;
 }

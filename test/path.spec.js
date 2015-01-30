@@ -46,13 +46,41 @@ describe('join', () => {
   });
 
   it('can combine an absolute path and a simple path', () => {
+    var path1 = '/one';
+    var path2 = 'two';
+
+    expect(join(path1, path2)).toBe('/one/two');
+  });
+
+  it('can combine an absolute path and a simple path with slash', () => {
+    var path1 = '/one';
+    var path2 = '/two';
+
+    expect(join(path1, path2)).toBe('/one/two');
+  });
+
+  it('can combine a single slash and a simple path', () => {
+    var path1 = '/';
+    var path2 = 'two';
+
+    expect(join(path1, path2)).toBe('/two');
+  });
+
+  it('can combine a single slash and a simple path with slash', () => {
+    var path1 = '/';
+    var path2 = '/two';
+
+    expect(join(path1, path2)).toBe('/two');
+  });
+
+  it('can combine an absolute path with protocol and a simple path', () => {
     var path1 = 'http://durandal.io';
     var path2 = 'two';
 
     expect(join(path1, path2)).toBe('http://durandal.io/two');
   });
 
-  it('can combine an absolute path and a simple path with slash', () => {
+  it('can combine an absolute path with protocol and a simple path with slash', () => {
     var path1 = 'http://durandal.io';
     var path2 = '/two';
 
