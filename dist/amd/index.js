@@ -40,7 +40,7 @@ define(["exports"], function (exports) {
   }
 
   function join(path1, path2) {
-    var url1, url2, url3, i, ii;
+    var url1, url2, url3, i, ii, urlPrefix;
 
     if (!path1) {
       return path2;
@@ -49,6 +49,8 @@ define(["exports"], function (exports) {
     if (!path2) {
       return path1;
     }
+
+    urlPrefix = path1.indexOf("/") === 0 ? "/" : "";
 
     url1 = path1.split("/");
     url2 = path2.split("/");
@@ -74,6 +76,7 @@ define(["exports"], function (exports) {
       }
     }
 
-    return url3.join("/").replace(/\:\//g, "://");;
+    return urlPrefix + url3.join("/").replace(/\:\//g, "://");;
   }
+  exports.__esModule = true;
 });

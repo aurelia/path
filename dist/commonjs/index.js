@@ -39,7 +39,7 @@ function relativeToFile(name, file) {
 }
 
 function join(path1, path2) {
-  var url1, url2, url3, i, ii;
+  var url1, url2, url3, i, ii, urlPrefix;
 
   if (!path1) {
     return path2;
@@ -48,6 +48,8 @@ function join(path1, path2) {
   if (!path2) {
     return path1;
   }
+
+  urlPrefix = path1.indexOf("/") === 0 ? "/" : "";
 
   url1 = path1.split("/");
   url2 = path2.split("/");
@@ -73,5 +75,6 @@ function join(path1, path2) {
     }
   }
 
-  return url3.join("/").replace(/\:\//g, "://");;
+  return urlPrefix + url3.join("/").replace(/\:\//g, "://");;
 }
+exports.__esModule = true;
