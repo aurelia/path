@@ -18,11 +18,11 @@
     "url": "http://github.com/aurelia/path"
   },
   "jspm": {
+    "main": "system/index",
+    "format": "register",
     "directories": {
       "lib": "dist"
-    },
-    "main": "system/index",
-    "format": "register"
+    }
   },
   "devDependencies": {
     "aurelia-tools": "^0.1.0",

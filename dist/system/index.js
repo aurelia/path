@@ -1,9 +1,12 @@
 System.register([], function (_export) {
   "use strict";
 
+  var r20, rbracket, class2type;
   _export("relativeToFile", relativeToFile);
 
   _export("join", join);
+
+  _export("buildParams", buildParams);
 
   function trimDots(ary) {
     var i, part;
@@ -80,8 +83,59 @@ System.register([], function (_export) {
 
     return urlPrefix + url3.join("/").replace(/\:\//g, "://");;
   }
+
+  function type(obj) {
+    if (obj == null) {
+      return obj + "";
+    }
+    return typeof obj === "object" || typeof obj === "function" ? class2type[toString.call(obj)] || "object" : typeof obj;
+  }
+
+  function buildParams(a, traditional) {
+    var prefix = undefined,
+        s = [],
+        add = function (key, value) {
+      value = typeof value === "function" ? value() : value == null ? "" : value;
+      s[s.length] = encodeURIComponent(key) + "=" + encodeURIComponent(value);
+    };
+
+    for (prefix in a) {
+      _buildParams(prefix, a[prefix], traditional, add);
+    }
+
+    return s.join("&").replace(r20, "+");
+  }
+
+  function _buildParams(prefix, obj, traditional, add) {
+    var name = undefined;
+
+    if (Array.isArray(obj)) {
+      obj.forEach(function (v, i) {
+        if (traditional || rbracket.test(prefix)) {
+          add(prefix, v);
+        } else {
+          _buildParams(prefix + "[" + (typeof v === "object" ? i : "") + "]", v, traditional, add);
+        }
+      });
+    } else if (!traditional && type(obj) === "object") {
+      for (name in obj) {
+        _buildParams(prefix + "[" + name + "]", obj[name], traditional, add);
+      }
+    } else {
+      add(prefix, obj);
+    }
+  }
   return {
     setters: [],
-    execute: function () {}
+    execute: function () {
+      r20 = /%20/g;
+      rbracket = /\[\]$/;
+      class2type = {};
+
+
+      "Boolean Number String Function Array Date RegExp Object Error".split(" ").forEach(function (name, i) {
+        class2type["[object " + name + "]"] = name.toLowerCase();
+      });
+    }
   };
 });
