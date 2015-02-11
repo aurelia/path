@@ -54,7 +54,7 @@ export function join(path1, path2) {
   if(!path2){
     return path1;
   }
-  
+
   urlPrefix = path1.indexOf('/') === 0 ? '/' : '';
 
   url1 = path1.split('/');
@@ -84,70 +84,68 @@ export function join(path1, path2) {
   return urlPrefix + url3.join('/').replace(/\:\//g, '://');;
 }
 
-let r20 = /%20/g,
-  rbracket = /\[\]$/,
-  class2type = {};
+var r20 = /%20/g,
+    rbracket = /\[\]$/,
+    class2type = {};
 
-"Boolean Number String Function Array Date RegExp Object Error".split(" ").forEach((name, i) => {
-  class2type[ "[object " + name + "]" ] = name.toLowerCase();
-})
+'Boolean Number String Function Array Date RegExp Object Error'.split(' ').forEach((name, i) => {
+  class2type['[object ' + name + ']'] = name.toLowerCase();
+});
 
-function type ( obj ) {
-  if ( obj == null ) {
+function type( obj ){
+  if (obj == null){
     return obj + "";
   }
+
   // Support: Android<4.0 (functionish RegExp)
-  return typeof obj === "object" || typeof obj === "function" ?
-    class2type[ toString.call(obj) ] || "object" :
-    typeof obj;
+  return typeof obj === 'object' || typeof obj === 'function'
+    ? class2type[ toString.call(obj) ] || 'object'
+    : typeof obj;
 }
 
-export function buildParams ( a, traditional ) {
-  let prefix,
-    s = [],
-    add = function( key, value ) {
-      // If value is a function, invoke it and return its value
-      value = typeof value === 'function' ? value() : ( value == null ? "" : value );
-      s[ s.length ] = encodeURIComponent( key ) + "=" + encodeURIComponent( value );
-    };
+export function buildQueryString(a, traditional){
+  var prefix,
+      s = [],
+      add = function(key, value) {
+        // If value is a function, invoke it and return its value
+        value = typeof value === 'function' ? value() : (value == null ? '' : value);
+        s[s.length] = encodeURIComponent(key) + '=' + encodeURIComponent(value);
+      };
 
-  for ( prefix in a ) {
-    _buildParams( prefix, a[ prefix ], traditional, add );
+  for(prefix in a){
+    _buildQueryString(prefix, a[prefix], traditional, add);
   }
 
   // Return the resulting serialization
-  return s.join( "&" ).replace( r20, "+" );
+  return s.join('&').replace(r20, '+');
 }
 
-function _buildParams ( prefix, obj, traditional, add ) {
-  let name;
+function _buildQueryString(prefix, obj, traditional, add){
+  var name;
 
-  if ( Array.isArray( obj ) ) {
+  if (Array.isArray(obj)){
     // Serialize array item.
-    obj.forEach(( v, i ) => {
-      if ( traditional || rbracket.test( prefix ) ) {
+    obj.forEach((v, i) => {
+      if(traditional || rbracket.test(prefix)){
         // Treat each array item as a scalar.
-        add( prefix, v );
-
-      } else {
+        add(prefix, v);
+      } else{
         // Item is non-scalar (array or object), encode its numeric index.
-        _buildParams(
-          prefix + "[" + ( typeof v === "object" ? i : "" ) + "]",
+        _buildQueryString(
+          prefix + '[' + (typeof v === 'object' ? i : '') + ']',
           v,
           traditional,
           add
         );
       }
     });
-
-  } else if ( !traditional && type(obj) === "object" ) {
+  } else if (!traditional && type(obj) === 'object'){
     // Serialize object item.
-    for ( name in obj ) {
-      _buildParams( prefix + "[" + name + "]", obj[ name ], traditional, add );
+    for (name in obj) {
+      _buildQueryString(prefix + '[' + name + ']', obj[name], traditional, add);
     }
-
-  } else {
+  } else{
     // Serialize scalar item.
-    add( prefix, obj );
+    add(prefix, obj);
   }
 }
