@@ -1,3 +1,17 @@
+### 0.4.3 (2015-02-11)
+
+
+#### Bug Fixes
+
+* **all:** rename buildParams to buildQueryString ([e6d9ed33](http://github.com/aurelia/path/commit/e6d9ed334e2a3ad096c740996855213fee2c225d))
+* **build:** add missing bower bump ([869ab8dd](http://github.com/aurelia/path/commit/869ab8ddac6aa73ca3006b0a03572bc32228f961))
+
+
+#### Features
+
+* **all:** add buildParams for building querystrings. ([52b22de6](http://github.com/aurelia/path/commit/52b22de6747043742d5096be952780ab58732020))
+
+
 ### 0.4.2 (2015-01-30)
 
 
