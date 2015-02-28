@@ -11,6 +11,11 @@ function trimDots(ary) {
       ary.splice(i, 1);
       i -= 1;
     } else if (part === "..") {
+      // If at the start, or previous value is still ..,
+      // keep them so that when converted to a path it may
+      // still work when converted to a path, even though
+      // as an ID it is less than ideal. In larger point
+      // releases, may be better to just kick out an error.
       if (i === 0 || i == 1 && ary[2] === ".." || ary[i - 1] === "..") {
         continue;
       } else if (i > 0) {
@@ -30,6 +35,11 @@ function relativeToFile(name, file) {
   name = name.split("/");
 
   if (name[0].charAt(0) === "." && fileParts) {
+    //Convert file to array, and lop off the last part,
+    //so that . matches that 'directory' and not name of the file's
+    //module. For instance, file of 'one/two/three', maps to
+    //'one/two/three.js', but we want the directory, 'one/two' for
+    //this normalization.
     normalizedBaseParts = fileParts.slice(0, fileParts.length - 1);
     name = normalizedBaseParts.concat(name);
   }
@@ -92,13 +102,15 @@ function type(obj) {
     return obj + "";
   }
 
+  // Support: Android<4.0 (functionish RegExp)
   return typeof obj === "object" || typeof obj === "function" ? class2type[toString.call(obj)] || "object" : typeof obj;
 }
 
 function buildQueryString(a, traditional) {
   var prefix,
       s = [],
-      add = function (key, value) {
+      add = function add(key, value) {
+    // If value is a function, invoke it and return its value
     value = typeof value === "function" ? value() : value == null ? "" : value;
     s[s.length] = encodeURIComponent(key) + "=" + encodeURIComponent(value);
   };
@@ -107,6 +119,7 @@ function buildQueryString(a, traditional) {
     _buildQueryString(prefix, a[prefix], traditional, add);
   }
 
+  // Return the resulting serialization
   return s.join("&").replace(r20, "+");
 }
 
@@ -114,19 +127,26 @@ function _buildQueryString(prefix, obj, traditional, add) {
   var name;
 
   if (Array.isArray(obj)) {
+    // Serialize array item.
     obj.forEach(function (v, i) {
       if (traditional || rbracket.test(prefix)) {
+        // Treat each array item as a scalar.
         add(prefix, v);
       } else {
+        // Item is non-scalar (array or object), encode its numeric index.
         _buildQueryString(prefix + "[" + (typeof v === "object" ? i : "") + "]", v, traditional, add);
       }
     });
   } else if (!traditional && type(obj) === "object") {
+    // Serialize object item.
     for (name in obj) {
       _buildQueryString(prefix + "[" + name + "]", obj[name], traditional, add);
     }
   } else {
+    // Serialize scalar item.
     add(prefix, obj);
   }
 }
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
