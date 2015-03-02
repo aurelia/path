@@ -11,10 +11,10 @@ This library has **NO** external dependencies.
 ## Used By
 
 * [aurelia-http-client](https://github.com/aurelia/http-client)
-* [aurelia-loader-systemjs](https://github.com/aurelia/loader-systemjs)
 * [aurelia-templating](https://github.com/aurelia/templating)
 * [aurelia-templating-router](https://github.com/aurelia/templating-router)
 * [aurelia-router](https://github.com/aurelia/router)
+* [aurelia-loader](https://github.com/aurelia/loader)
 
 ## Platform Support
 
