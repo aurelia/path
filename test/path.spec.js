@@ -108,6 +108,34 @@ describe('join', () => {
     expect(join(path1, path2)).toBe('http://durandal.io/two');
   });
 
+  it('can combine a protocol independent path and a simple path', () => {
+    var path1 = '//durandal.io';
+    var path2 = 'two';
+
+    expect(join(path1, path2)).toBe('//durandal.io/two');
+  });
+
+  it('can combine a protocol independent path and a simple path with slash', () => {
+    var path1 = '//durandal.io';
+    var path2 = '/two';
+
+    expect(join(path1, path2)).toBe('//durandal.io/two');
+  });
+
+  it('can combine a protocol independent path and a simple path with a dot', () => {
+    var path1 = '//durandal.io';
+    var path2 = './two';
+
+    expect(join(path1, path2)).toBe('//durandal.io/two');
+  });
+
+  it('can combine a protocol independent path and a relative path', () => {
+    var path1 = '//durandal.io/somewhere';
+    var path2 = '../two';
+
+    expect(join(path1, path2)).toBe('//durandal.io/two');
+  });
+
   it('can combine a complex path and a relative path', () => {
     var path1 = 'one/three';
     var path2 = '../two';
