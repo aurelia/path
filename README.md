@@ -15,6 +15,7 @@ This library has **NO** external dependencies.
 * [aurelia-templating-router](https://github.com/aurelia/templating-router)
 * [aurelia-router](https://github.com/aurelia/router)
 * [aurelia-loader](https://github.com/aurelia/loader)
+* [aurelia-framework](https://github.com/aurelia/framework)
 
 ## Platform Support
 
