@@ -1,3 +1,11 @@
+### 0.4.6 (2015-03-24)
+
+
+#### Bug Fixes
+
+* **path:** Join protocol independent paths ([34655ae4](http://github.com/aurelia/path/commit/34655ae41d7d3495a84be25fce8866373e196c37))
+
+
 ### 0.4.5 (2015-02-28)
 
 

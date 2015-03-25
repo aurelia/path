@@ -61,7 +61,7 @@ define(["exports"], function (exports) {
       return path1;
     }
 
-    urlPrefix = path1.indexOf("/") === 0 ? "/" : "";
+    urlPrefix = path1.indexOf("//") === 0 ? "//" : path1.indexOf("/") === 0 ? "/" : "";
 
     url1 = path1.split("/");
     url2 = path2.split("/");
