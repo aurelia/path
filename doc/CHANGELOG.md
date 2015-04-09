@@ -1,3 +1,11 @@
+## 0.5.0 (2015-04-09)
+
+
+#### Bug Fixes
+
+* **all:** update compiler ([191125de](http://github.com/aurelia/path/commit/191125de9da5ae4cf122068429c65ade7237454c))
+
+
 ### 0.4.6 (2015-03-24)
 
 
