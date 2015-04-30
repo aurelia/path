@@ -57,6 +57,7 @@ export function join(path1, path2) {
 
   urlPrefix = path1.indexOf('//') === 0 ? '//' :
               path1.indexOf('/') === 0 ? '/' : '';
+  trailingSlash = path2.slice(-1) == '/' ? '/' : '';
 
   url1 = path1.split('/');
   url2 = path2.split('/');
@@ -82,7 +83,7 @@ export function join(path1, path2) {
     }
   }
 
-  return urlPrefix + url3.join('/').replace(/\:\//g, '://');;
+  return urlPrefix + url3.join('/').replace(/\:\//g, '://') + trailingSlash;
 }
 
 var r20 = /%20/g,

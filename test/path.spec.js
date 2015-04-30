@@ -170,4 +170,11 @@ describe('join', () => {
 
     expect(join(path1, path2)).toBe('one');
   });
+  it('should respect a trailing slash', () => {
+    var path1 = 'one/';
+    var path2 = 'two/';
+
+    expect(join(path1, path2)).toBe('one/two/');
+  });
 });
+
