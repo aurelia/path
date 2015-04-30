@@ -1,3 +1,13 @@
+## 0.6.0 (2015-04-30)
+
+
+#### Bug Fixes
+
+* **join:**
+  * add compiled js ([46620452](http://github.com/aurelia/path/commit/4662045269ee3e764efb2afc7e48b7ac68ca68e3))
+  * keep trailing slash ([3e7ed200](http://github.com/aurelia/path/commit/3e7ed2005bf90d007e1742f9ff78965a99547623))
+
+
 ## 0.5.0 (2015-04-09)
 
 
