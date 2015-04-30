@@ -55,6 +55,7 @@ System.register([], function (_export) {
     }
 
     urlPrefix = path1.indexOf('//') === 0 ? '//' : path1.indexOf('/') === 0 ? '/' : '';
+    trailingSlash = path2.slice(-1) == '/' ? '/' : '';
 
     url1 = path1.split('/');
     url2 = path2.split('/');
@@ -80,7 +81,7 @@ System.register([], function (_export) {
       }
     }
 
-    return urlPrefix + url3.join('/').replace(/\:\//g, '://');;
+    return urlPrefix + url3.join('/').replace(/\:\//g, '://') + trailingSlash;
   }
 
   function type(obj) {
