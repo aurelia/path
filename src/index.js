@@ -45,7 +45,7 @@ export function relativeToFile(name, file){
 }
 
 export function join(path1, path2) {
-  var url1, url2, url3, i, ii, urlPrefix;
+  var url1, url2, url3, i, ii, urlPrefix, trailingSlash;
 
   if(!path1){
     return path2;
