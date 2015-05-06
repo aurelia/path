@@ -1,3 +1,11 @@
+### 0.6.1 (2015-05-06)
+
+
+#### Bug Fixes
+
+* **Path:** declare trailingSlash ([3b772ff6](http://github.com/aurelia/path/commit/3b772ff6efd01f0b84c208753effa7df06862c8f))
+
+
 ## 0.6.0 (2015-04-30)
 
 
