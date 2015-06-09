@@ -1,4 +1,6 @@
 System.register([], function (_export) {
+  'use strict';
+
   var r20, rbracket, class2type;
 
   _export('relativeToFile', relativeToFile);
@@ -129,8 +131,6 @@ System.register([], function (_export) {
   return {
     setters: [],
     execute: function () {
-      'use strict';
-
       r20 = /%20/g;
       rbracket = /\[\]$/;
       class2type = {};
