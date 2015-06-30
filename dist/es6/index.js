@@ -21,7 +21,7 @@ function trimDots(ary) {
   }
 }
 
-export function relativeToFile(name, file){
+export function relativeToFile(name:string, file:string):string{
   var lastIndex,
       normalizedBaseParts,
       fileParts = (file && file.split('/'));
@@ -44,7 +44,7 @@ export function relativeToFile(name, file){
   return name.join('/');
 }
 
-export function join(path1, path2) {
+export function join(path1:string, path2:string):string {
   var url1, url2, url3, i, ii, urlPrefix, trailingSlash;
 
   if(!path1){
@@ -105,7 +105,7 @@ function type( obj ){
     : typeof obj;
 }
 
-export function buildQueryString(a, traditional){
+export function buildQueryString(a:string, traditional?:boolean):string {
   var prefix,
       s = [],
       add = function(key, value) {
