@@ -104,8 +104,7 @@ function type( obj ){
 }
 
 export function buildQueryString(a:Object, traditional?:boolean):string {
-  var prefix,
-      s = [],
+  var s = [],
       add = function(key:string, value:any) {
         // If value is a function, invoke it and return its value
         value = typeof value === 'function' ? value() : (value == null ? '' : value);
