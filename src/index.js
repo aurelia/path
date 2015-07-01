@@ -1,4 +1,4 @@
-function trimDots(ary) {
+function trimDots(ary: string[]) {
   var i, part;
   for (i = 0; i < ary.length; ++i) {
       part = ary[i];
@@ -24,24 +24,22 @@ function trimDots(ary) {
 export function relativeToFile(name:string, file:string):string{
   var lastIndex,
       normalizedBaseParts,
-      fileParts = (file && file.split('/'));
+      fileParts = (file && file.split('/')),
+      nameParts = name.trim().split('/');
 
-  name = name.trim();
-  name = name.split('/');
-
-  if (name[0].charAt(0) === '.' && fileParts) {
+  if (nameParts[0].charAt(0) === '.' && fileParts) {
       //Convert file to array, and lop off the last part,
       //so that . matches that 'directory' and not name of the file's
       //module. For instance, file of 'one/two/three', maps to
       //'one/two/three.js', but we want the directory, 'one/two' for
       //this normalization.
       normalizedBaseParts = fileParts.slice(0, fileParts.length - 1);
-      name = normalizedBaseParts.concat(name);
+      nameParts = normalizedBaseParts.concat(nameParts);
   }
 
-  trimDots(name);
+  trimDots(nameParts);
 
-  return name.join('/');
+  return nameParts.join('/');
 }
 
 export function join(path1:string, path2:string):string {
@@ -105,16 +103,15 @@ function type( obj ){
     : typeof obj;
 }
 
-export function buildQueryString(a:string, traditional?:boolean):string {
-  var prefix,
-      s = [],
-      add = function(key, value) {
+export function buildQueryString(a:Object, traditional?:boolean):string {
+  var s = [],
+      add = function(key:string, value:any) {
         // If value is a function, invoke it and return its value
         value = typeof value === 'function' ? value() : (value == null ? '' : value);
         s[s.length] = encodeURIComponent(key) + '=' + encodeURIComponent(value);
       };
 
-  for(prefix in a){
+  for(let prefix in a){
     _buildQueryString(prefix, a[prefix], traditional, add);
   }
 
@@ -122,9 +119,7 @@ export function buildQueryString(a:string, traditional?:boolean):string {
   return s.join('&').replace(r20, '+');
 }
 
-function _buildQueryString(prefix, obj, traditional, add){
-  var name;
-
+function _buildQueryString(prefix:string, obj:any, traditional:boolean, add: (p:string, v:any) => void){
   if (Array.isArray(obj)){
     // Serialize array item.
     obj.forEach((v, i) => {
@@ -143,7 +138,7 @@ function _buildQueryString(prefix, obj, traditional, add){
     });
   } else if (!traditional && type(obj) === 'object'){
     // Serialize object item.
-    for (name in obj) {
+    for (let name in obj) {
       _buildQueryString(prefix + '[' + name + ']', obj[name], traditional, add);
     }
   } else{
