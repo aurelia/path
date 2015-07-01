@@ -26,19 +26,17 @@ define(['exports'], function (exports) {
   function relativeToFile(name, file) {
     var lastIndex,
         normalizedBaseParts,
-        fileParts = file && file.split('/');
+        fileParts = file && file.split('/'),
+        nameParts = name.trim().split('/');
 
-    name = name.trim();
-    name = name.split('/');
-
-    if (name[0].charAt(0) === '.' && fileParts) {
+    if (nameParts[0].charAt(0) === '.' && fileParts) {
       normalizedBaseParts = fileParts.slice(0, fileParts.length - 1);
-      name = normalizedBaseParts.concat(name);
+      nameParts = normalizedBaseParts.concat(nameParts);
     }
 
-    trimDots(name);
+    trimDots(nameParts);
 
-    return name.join('/');
+    return nameParts.join('/');
   }
 
   function join(path1, path2) {
@@ -99,14 +97,13 @@ define(['exports'], function (exports) {
   }
 
   function buildQueryString(a, traditional) {
-    var prefix,
-        s = [],
+    var s = [],
         add = function add(key, value) {
       value = typeof value === 'function' ? value() : value == null ? '' : value;
       s[s.length] = encodeURIComponent(key) + '=' + encodeURIComponent(value);
     };
 
-    for (prefix in a) {
+    for (var prefix in a) {
       _buildQueryString(prefix, a[prefix], traditional, add);
     }
 
@@ -114,8 +111,6 @@ define(['exports'], function (exports) {
   }
 
   function _buildQueryString(prefix, obj, traditional, add) {
-    var name;
-
     if (Array.isArray(obj)) {
       obj.forEach(function (v, i) {
         if (traditional || rbracket.test(prefix)) {
@@ -125,8 +120,8 @@ define(['exports'], function (exports) {
         }
       });
     } else if (!traditional && type(obj) === 'object') {
-      for (name in obj) {
-        _buildQueryString(prefix + '[' + name + ']', obj[name], traditional, add);
+      for (var _name in obj) {
+        _buildQueryString(prefix + '[' + _name + ']', obj[_name], traditional, add);
       }
     } else {
       add(prefix, obj);
