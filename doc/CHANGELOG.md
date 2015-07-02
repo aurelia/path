@@ -1,3 +1,11 @@
+## 0.8.0 (2015-07-01)
+
+
+#### Bug Fixes
+
+* **package:** update aurelia tools and dts generator ([379e53e0](http://github.com/aurelia/path/commit/379e53e071c3691e6fb8d289ff31cba998938d76))
+
+
 ## 0.7.0 (2015-06-08)
 
 
