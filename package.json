@@ -12,13 +12,13 @@
   },
   "license": "MIT",
   "author": "Rob Eisenberg <rob@bluespire.com> (http://robeisenberg.com/)",
-  "main": "dist/commonjs/index.js",
+  "main": "dist/commonjs/aurelia-path.js",
   "repository": {
     "type": "git",
     "url": "http://github.com/aurelia/path"
   },
   "jspm": {
-    "main": "index",
+    "main": "aurelia-path",
     "format": "amd",
     "directories": {
       "lib": "dist/amd"
