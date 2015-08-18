@@ -170,11 +170,40 @@ describe('join', () => {
 
     expect(join(path1, path2)).toBe('one');
   });
+
   it('should respect a trailing slash', () => {
     var path1 = 'one/';
     var path2 = 'two/';
 
     expect(join(path1, path2)).toBe('one/two/');
+  });
+
+  it('should respect file:/// protocol with three slashes (empty host)', () => {
+    var path1 = 'file:///one';
+    var path2 = '/two';
+
+    expect(join(path1, path2)).toBe('file:///one/two');
+  });
+
+  it('should respect file:// protocol with two slashes (host given)', () => {
+    var path1 = 'file://localhost:8080';
+    var path2 = '/two';
+
+    expect(join(path1, path2)).toBe('file://localhost:8080/two');
+  });
+
+  it('should allow scheme-relative URL that uses colons in the path', () => {
+    var path1 = '//localhost/one:/';
+    var path2 = '/two';
+
+    expect(join(path1, path2)).toBe('//localhost/one:/two');
+  });
+
+  it('should not add more than two leading slashes to http:// protocol', () => {
+    var path1 = 'http:///';
+    var path2 = '/two';
+
+    expect(join(path1, path2)).toBe('http://two');
   });
 });
 

@@ -48,8 +48,14 @@ export function join(path1: string, path2: string): string {
     return path1;
   }
 
+  let schemeMatch = path1.match(/^([^/]*?:)\//);
+  let scheme = (schemeMatch && schemeMatch.length > 0) ? schemeMatch[1] : '';
+  path1 = path1.substr(scheme.length);
+
   let urlPrefix;
-  if (path1.indexOf('//') === 0) {
+  if (path1.indexOf('///') === 0 && scheme === 'file:') {
+    urlPrefix = '///';
+  } else if (path1.indexOf('//') === 0) {
     urlPrefix = '//';
   } else if (path1.indexOf('/') === 0) {
     urlPrefix = '/';
@@ -83,7 +89,7 @@ export function join(path1: string, path2: string): string {
     }
   }
 
-  return urlPrefix + url3.join('/').replace(/\:\//g, '://') + trailingSlash;
+  return scheme + urlPrefix + url3.join('/') + trailingSlash;
 }
 
 
