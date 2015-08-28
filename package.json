@@ -54,6 +54,7 @@
       "aurelia-http-client",
       "aurelia-templating",
       "aurelia-router",
+      "aurelia-route-recognizer",
       "aurelia-templating-router",
       "aurelia-loader",
       "aurelia-framework"

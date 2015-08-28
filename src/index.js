@@ -86,70 +86,91 @@ export function join(path1: string, path2: string): string {
   return urlPrefix + url3.join('/').replace(/\:\//g, '://') + trailingSlash;
 }
 
-export function buildQueryString(a: Object, traditional?: boolean): string {
-  let s = [];
 
-  function add(key: string, value: any) {
-    // If value is a function, invoke it and return its value
-    let v = value;
-    if (typeof value === 'function') {
-      v = value();
-    } else if (value === null || value === undefined) {
-      v = '';
+/**
+* Generate a query string from an object.
+*
+* @param params Object containing the keys and values to be used.
+* @returns The generated query string, excluding leading '?'.
+*/
+export function buildQueryString(params: Object): string {
+  let pairs = [];
+  let keys = Object.keys(params || {}).sort();
+  let encode = encodeURIComponent;
+  let encodeKey = k => encode(k).replace('%24', '$');
+
+  for (let i = 0, len = keys.length; i < len; i++) {
+    let key = keys[i];
+    let value = params[key];
+    if (value === null || value === undefined) {
+      continue;
     }
 
-    s.push(encodeURIComponent(key) + '=' + encodeURIComponent(v));
-  }
-
-  for (let prefix in a) {
-    _buildQueryString(prefix, a[prefix], traditional, add);
-  }
-
-  // Return the resulting serialization
-  return s.join('&').replace(r20, '+');
-}
-
-function _buildQueryString(prefix: string, obj: any, traditional: boolean, add: (p: string, v: any) => void): void {
-  if (Array.isArray(obj)) {
-    // Serialize array item.
-    obj.forEach((v, i) => {
-      if (traditional || rbracket.test(prefix)) {
-        // Treat each array item as a scalar.
-        add(prefix, v);
-      } else {
-        // Item is non-scalar (array or object), encode its numeric index.
-        let innerPrefix = prefix + '[' + (typeof v === 'object' ? i : '') + ']';
-        _buildQueryString(innerPrefix, v, traditional, add);
+    if (Array.isArray(value)) {
+      let arrayKey = `${encodeKey(key)}[]`;
+      for (let j = 0, l = value.length; j < l; j++) {
+        pairs.push(`${arrayKey}=${encode(value[j])}`);
       }
-    });
-  } else if (!traditional && type(obj) === 'object') {
-    // Serialize object item.
-    for (let name in obj) {
-      _buildQueryString(prefix + '[' + name + ']', obj[name], traditional, add);
+    } else {
+      pairs.push(`${encodeKey(key)}=${encode(value)}`);
     }
-  } else {
-    // Serialize scalar item.
-    add(prefix, obj);
   }
+
+  if (pairs.length === 0) {
+    return '';
+  }
+
+  return pairs.join('&');
 }
 
-const r20 = /%20/g;
-const rbracket = /\[\]$/;
-const class2type = {};
-
-'Boolean Number String Function Array Date RegExp Object Error'
-  .split(' ')
-  .forEach((name) => {
-    class2type['[object ' + name + ']'] = name.toLowerCase();
-  });
-
-function type(obj: any) {
-  if (obj === null || obj === undefined) {
-    return obj + '';
+/**
+* Parse a query string.
+*
+* @param The query string to parse.
+* @returns Object with keys and values mapped from the query string.
+*/
+export function parseQueryString(queryString: string): Object {
+  let queryParams = {};
+  if (!queryString || typeof queryString !== 'string') {
+    return queryParams;
   }
 
-  // Support: Android<4.0 (functionish RegExp)
-  return typeof obj === 'object' || typeof obj === 'function'
-    ? class2type[toString.call(obj)] || 'object'
-    : typeof obj;
+  let query = queryString;
+  if (query.charAt(0) === '?') {
+    query = query.substr(1);
+  }
+
+  let pairs = query.split('&');
+  for (let i = 0; i < pairs.length; i++) {
+    let pair = pairs[i].split('=');
+    let key = decodeURIComponent(pair[0]);
+    let keyLength = key.length;
+    let isArray = false;
+    let value;
+
+    if (!key) {
+      continue;
+    } else if (pair.length === 1) {
+      value = true;
+    } else {
+      //Handle arrays
+      if (keyLength > 2 && key.slice(keyLength - 2) === '[]') {
+        isArray = true;
+        key = key.slice(0, keyLength - 2);
+        if (!queryParams[key]) {
+          queryParams[key] = [];
+        }
+      }
+
+      value = pair[1] ? decodeURIComponent(pair[1]) : '';
+    }
+
+    if (isArray) {
+      queryParams[key].push(value);
+    } else {
+      queryParams[key] = value;
+    }
+  }
+
+  return queryParams;
 }

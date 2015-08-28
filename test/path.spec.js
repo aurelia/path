@@ -1,4 +1,4 @@
-import { relativeToFile, join } from '../src/index';
+import { relativeToFile, join, parseQueryString, buildQueryString } from '../src/index';
 
 describe('relativeToFile', () => {
   it('can make a dot path relative to a simple file', () => {
@@ -178,3 +178,49 @@ describe('join', () => {
   });
 });
 
+describe('query strings', () => {
+  it('should build query strings', () => {
+    let gen = buildQueryString;
+
+    expect(gen()).toBe('');
+    expect(gen(null)).toBe('');
+    expect(gen({})).toBe('');
+    expect(gen({ a: null })).toBe('');
+
+    expect(gen({ '': 'a' })).toBe('=a');
+    expect(gen({ a: 'b' })).toBe('a=b');
+    expect(gen({ a: 'b', c: 'd' })).toBe('a=b&c=d');
+    expect(gen({ a: 'b', c: null })).toBe('a=b');
+
+    expect(gen({ a: [ 'b', 'c' ]})).toBe('a[]=b&a[]=c');
+    expect(gen({ '&': [ 'b', 'c' ]})).toBe('%26[]=b&%26[]=c');
+
+    expect(gen({ a: '&' })).toBe('a=%26');
+    expect(gen({ '&': 'a' })).toBe('%26=a');
+    expect(gen({ a: true })).toBe('a=true');
+    expect(gen({ '$test': true })).toBe('$test=true');
+  });
+
+  it('should parse query strings', () => {
+    let parse = parseQueryString;
+
+    expect(parse('')).toEqual({});
+    expect(parse('=')).toEqual({});
+    expect(parse('&')).toEqual({});
+    expect(parse('?')).toEqual({});
+
+    expect(parse('a')).toEqual({ a: true });
+    expect(parse('a&b')).toEqual({ a: true, b: true });
+    expect(parse('a=')).toEqual({ a: '' });
+    expect(parse('a=&b=')).toEqual({ a: '', b: '' });
+
+    expect(parse('a=b')).toEqual({ a: 'b' });
+    expect(parse('a=b&c=d')).toEqual({ a: 'b', c: 'd' });
+    expect(parse('a=b&&c=d')).toEqual({ a: 'b', c: 'd' });
+    expect(parse('a=b&a=c')).toEqual({ a: 'c' });
+
+    expect(parse('a=%26')).toEqual({ a: '&' });
+    expect(parse('%26=a')).toEqual({ '&': 'a' });
+    expect(parse('%26[]=b&%26[]=c')).toEqual({ '&': [ 'b', 'c' ]});
+  });
+});
