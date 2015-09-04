@@ -1,3 +1,18 @@
+## 0.9.0 (2015-09-04)
+
+
+#### Bug Fixes
+
+* **build:** update linting, testing and tools ([557f223f](http://github.com/aurelia/path/commit/557f223f4bb9db1969023ae64fb4a9e8d752231d))
+* **join:** respect file protocol with empty host ([d51d32b7](http://github.com/aurelia/path/commit/d51d32b73c979430bdcc7501fe56cda29f79c278))
+
+
+#### Features
+
+* **docs:** generate api.json from .d.ts file ([9362b808](http://github.com/aurelia/path/commit/9362b8086e73d06180e7d11c1f5c0e57e38485db))
+* **query-strings:** move query string helpers from route-recognizer so they can be reused ([adccb98d](http://github.com/aurelia/path/commit/adccb98d3fe54ed562bb07589a932b939230a12a))
+
+
 ### 0.8.1 (2015-07-29)
 
 * improve output file name
