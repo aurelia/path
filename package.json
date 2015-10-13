@@ -1,6 +1,6 @@
 {
   "name": "aurelia-path",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Utilities for path manipulation.",
   "keywords": [
     "aurelia",
@@ -26,9 +26,7 @@
     "devDependencies": {
       "babel": "npm:babel-core@^5.1.13",
       "babel-runtime": "npm:babel-runtime@^5.1.13",
-      "core-js": "npm:core-js@^0.9.5",
-      "traceur": "github:jmcriffey/bower-traceur@0.0.91",
-      "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.91"
+      "core-js": "npm:core-js@^0.9.5"
     }
   },
   "devDependencies": {
@@ -59,36 +57,8 @@
     "yargs": "^2.1.1"
   },
   "aurelia": {
-    "usedBy": [
-      "aurelia-http-client",
-      "aurelia-templating",
-      "aurelia-router",
-      "aurelia-route-recognizer",
-      "aurelia-templating-router",
-      "aurelia-loader",
-      "aurelia-framework"
-    ],
     "documentation": {
-      "links": [
-        {
-          "rel": "license",
-          "mediaType": "text/plain",
-          "title": "The MIT License (MIT)",
-          "href": "LICENSE"
-        },
-        {
-          "rel": "describedby",
-          "mediaType": "application/aurelia-doc+json",
-          "title": "API",
-          "href": "doc/api.json"
-        },
-        {
-          "rel": "version-history",
-          "mediaType": "text/markdown",
-          "title": "Change Log",
-          "href": "doc/CHANGELOG.md"
-        }
-      ]
+      "articles": []
     }
   }
 }
