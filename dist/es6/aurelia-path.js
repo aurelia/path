@@ -20,6 +20,13 @@ function trimDots(ary: string[]): void {
   }
 }
 
+/**
+* Calcualtes a path relative to a file.
+*
+* @param name The relative path.
+* @param file The file path.
+* @return The calcualted path.
+*/
 export function relativeToFile(name: string, file: string): string {
   let fileParts = file && file.split('/');
   let nameParts = name.trim().split('/');
@@ -39,6 +46,13 @@ export function relativeToFile(name: string, file: string): string {
   return nameParts.join('/');
 }
 
+/**
+* Joins two paths.
+*
+* @param path1 The first path.
+* @param path2 The second path.
+* @return The joined path.
+*/
 export function join(path1: string, path2: string): string {
   if (!path1) {
     return path2;
