@@ -221,13 +221,18 @@ describe('query strings', () => {
     expect(gen({ a: 'b', c: 'd' })).toBe('a=b&c=d');
     expect(gen({ a: 'b', c: null })).toBe('a=b');
 
-    expect(gen({ a: [ 'b', 'c' ]})).toBe('a[]=b&a[]=c');
-    expect(gen({ '&': [ 'b', 'c' ]})).toBe('%26[]=b&%26[]=c');
+    expect(gen({ a: ['b', 'c'] })).toBe('a%5B%5D=b&a%5B%5D=c');
+    expect(gen({ '&': ['b', 'c'] })).toBe('%26%5B%5D=b&%26%5B%5D=c');
 
     expect(gen({ a: '&' })).toBe('a=%26');
     expect(gen({ '&': 'a' })).toBe('%26=a');
     expect(gen({ a: true })).toBe('a=true');
     expect(gen({ '$test': true })).toBe('$test=true');
+
+    expect(gen({ obj: { a: 5, b: "str", c: false } })).toBe('obj%5Ba%5D=5&obj%5Bb%5D=str&obj%5Bc%5D=false');
+    expect(gen({ obj:{ a: 5, b: undefined}})).toBe('obj%5Ba%5D=5');
+        
+    expect(gen({a: {b: ['c','d', ['f', 'g']]}})).toBe('a%5Bb%5D%5B%5D=c&a%5Bb%5D%5B%5D=d&a%5Bb%5D%5B2%5D%5B%5D=f&a%5Bb%5D%5B2%5D%5B%5D=g');
   });
 
   it('should parse query strings', () => {
@@ -250,6 +255,10 @@ describe('query strings', () => {
 
     expect(parse('a=%26')).toEqual({ a: '&' });
     expect(parse('%26=a')).toEqual({ '&': 'a' });
-    expect(parse('%26[]=b&%26[]=c')).toEqual({ '&': [ 'b', 'c' ]});
+    expect(parse('%26[]=b&%26[]=c')).toEqual({ '&': ['b', 'c'] });
+        
+    expect(parse('a[b]=c&a[d]=e')).toEqual({a: {b: 'c', d: 'e'}});
+    expect(parse('a[b][c][d]=e')).toEqual({a: {b: {c: {d: 'e'}}}});
+    expect(parse('a[b][]=c&a[b][]=d&a[b][2][]=f&a[b][2][]=g')).toEqual({a: {b: ['c','d', ['f', 'g']]}});
   });
 });
