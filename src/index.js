@@ -105,30 +105,33 @@ export function join(path1: string, path2: string): string {
   return scheme + urlPrefix + url3.join('/') + trailingSlash;
 }
 
+let encode = encodeURIComponent;
+let encodeKey = k => encode(k).replace('%24', '$');
 /**
 * Recursively builds part of query string for parameter.
 *
 * @param key Parameter name for query string.
 * @param value Parameter value to deserialize.
-* @param append Function for appending object to result string.
-* @return Serialized parameter.
+* @return Array with serialized parameter(s)
 */
-function appendParam(key: string, value: Object, append: Function): void {
+function buildParam(key: string, value: any): Array<string> {
+  let result = [];
   if (value === null || value === undefined) {
-    return;
+    return result;
   }
   if (Array.isArray(value)) {
     for (let i = 0, l = value.length; i < l; i++) {
       let arrayKey = key + '[' + (typeof value[i] === 'object' && value[i] !== null ? i : '') + ']';
-      appendParam(arrayKey, value[i], append);
+      result = result.concat(buildParam(arrayKey, value[i]));
     }
   } else if (typeof (value) === 'object') {
     for (let propertyName in value) {
-      appendParam(key + '[' + propertyName + ']', value[propertyName], append);
+      result = result.concat(buildParam(key + '[' + propertyName + ']', value[propertyName]));
     }
   } else {
-    append(key, value);
+    result.push(`${encodeKey(key) }=${encode(value) }`);
   }
+  return result;
 }
 
 /**
@@ -140,13 +143,9 @@ function appendParam(key: string, value: Object, append: Function): void {
 export function buildQueryString(params: Object): string {
   let pairs = [];
   let keys = Object.keys(params || {}).sort();
-  let encode = encodeURIComponent;
-  let encodeKey = k => encode(k).replace('%24', '$');
-  let append = (key, value) => pairs.push(`${encodeKey(key) }=${encode(value) }`);
-
   for (let i = 0, len = keys.length; i < len; i++) {
     let key = keys[i];
-    appendParam(key, params[key], append);
+    pairs = pairs.concat(buildParam(key, params[key]));
   }
 
   if (pairs.length === 0) {
