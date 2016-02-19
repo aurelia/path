@@ -19,13 +19,13 @@ function trimDots(ary: string[]): void {
     }
   }}
 
-  /**
-  * Calcualtes a path relative to a file.
-  *
-  * @param name The relative path.
-  * @param file The file path.
-  * @return The calcualted path.
-  */
+/**
+* Calcualtes a path relative to a file.
+*
+* @param name The relative path.
+* @param file The file path.
+* @return The calcualted path.
+*/
 export function relativeToFile(name: string, file: string): string {
   let fileParts = file && file.split('/');
   let nameParts = name.trim().split('/');
@@ -45,13 +45,13 @@ export function relativeToFile(name: string, file: string): string {
   return nameParts.join('/');
 }
 
-  /**
-  * Joins two paths.
-  *
-  * @param path1 The first path.
-  * @param path2 The second path.
-  * @return The joined path.
-  */
+/**
+* Joins two paths.
+*
+* @param path1 The first path.
+* @param path2 The second path.
+* @return The joined path.
+*/
 export function join(path1: string, path2: string): string {
   if (!path1) {
     return path2;
@@ -105,14 +105,14 @@ export function join(path1: string, path2: string): string {
   return scheme + urlPrefix + url3.join('/') + trailingSlash;
 }
 
-  /**
-  * Recursively builds part of query string for parameter.
-  *
-  * @param key Parameter name for query string.
-  * @param value Parameter value to deserialize.
-  * @param append Function for appending object to result string.
-  * @return Serialized parameter.
-  */
+/**
+* Recursively builds part of query string for parameter.
+*
+* @param key Parameter name for query string.
+* @param value Parameter value to deserialize.
+* @param append Function for appending object to result string.
+* @return Serialized parameter.
+*/
 function appendParam(key: string, value: Object, append: Function): void {
   if (value === null || value === undefined) {
     return;
@@ -131,12 +131,12 @@ function appendParam(key: string, value: Object, append: Function): void {
   }
 }
 
-  /**
-  * Generate a query string from an object.
-  *
-  * @param params Object containing the keys and values to be used.
-  * @returns The generated query string, excluding leading '?'.
-  */
+/**
+* Generate a query string from an object.
+*
+* @param params Object containing the keys and values to be used.
+* @returns The generated query string, excluding leading '?'.
+*/
 export function buildQueryString(params: Object): string {
   let pairs = [];
   let keys = Object.keys(params || {}).sort();
@@ -201,12 +201,12 @@ function parseComplexParam(queryParams: Object, keys: Object, value: any): void 
 }
 
 
-  /**
-  * Parse a query string.
-  *
-  * @param queryString The query string to parse.
-  * @returns Object with keys and values mapped from the query string.
-  */
+/**
+* Parse a query string.
+*
+* @param queryString The query string to parse.
+* @returns Object with keys and values mapped from the query string.
+*/
 export function parseQueryString(queryString: string): Object {
   let queryParams = {};
   if (!queryString || typeof queryString !== 'string') {
