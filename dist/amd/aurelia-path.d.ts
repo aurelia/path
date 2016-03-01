@@ -29,7 +29,7 @@ declare module 'aurelia-path' {
   /**
   * Parse a query string.
   *
-  * @param The query string to parse.
+  * @param queryString The query string to parse.
   * @returns Object with keys and values mapped from the query string.
   */
   export function parseQueryString(queryString: string): Object;

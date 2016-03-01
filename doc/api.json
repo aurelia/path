@@ -129,6 +129,9 @@
               "kind": 32768,
               "kindString": "Parameter",
               "flags": {},
+              "comment": {
+                "text": "The query string to parse."
+              },
               "type": {
                 "type": "instrinct",
                 "name": "string"

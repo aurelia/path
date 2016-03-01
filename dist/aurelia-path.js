@@ -17,8 +17,7 @@ function trimDots(ary: string[]): void {
         i -= 2;
       }
     }
-  }
-}
+  }}
 
 /**
 * Calcualtes a path relative to a file.
@@ -106,6 +105,34 @@ export function join(path1: string, path2: string): string {
   return scheme + urlPrefix + url3.join('/') + trailingSlash;
 }
 
+let encode = encodeURIComponent;
+let encodeKey = k => encode(k).replace('%24', '$');
+/**
+* Recursively builds part of query string for parameter.
+*
+* @param key Parameter name for query string.
+* @param value Parameter value to deserialize.
+* @return Array with serialized parameter(s)
+*/
+function buildParam(key: string, value: any): Array<string> {
+  let result = [];
+  if (value === null || value === undefined) {
+    return result;
+  }
+  if (Array.isArray(value)) {
+    for (let i = 0, l = value.length; i < l; i++) {
+      let arrayKey = key + '[' + (typeof value[i] === 'object' && value[i] !== null ? i : '') + ']';
+      result = result.concat(buildParam(arrayKey, value[i]));
+    }
+  } else if (typeof (value) === 'object') {
+    for (let propertyName in value) {
+      result = result.concat(buildParam(key + '[' + propertyName + ']', value[propertyName]));
+    }
+  } else {
+    result.push(`${encodeKey(key) }=${encode(value) }`);
+  }
+  return result;
+}
 
 /**
 * Generate a query string from an object.
@@ -116,24 +143,9 @@ export function join(path1: string, path2: string): string {
 export function buildQueryString(params: Object): string {
   let pairs = [];
   let keys = Object.keys(params || {}).sort();
-  let encode = encodeURIComponent;
-  let encodeKey = k => encode(k).replace('%24', '$');
-
   for (let i = 0, len = keys.length; i < len; i++) {
     let key = keys[i];
-    let value = params[key];
-    if (value === null || value === undefined) {
-      continue;
-    }
-
-    if (Array.isArray(value)) {
-      let arrayKey = `${encodeKey(key)}[]`;
-      for (let j = 0, l = value.length; j < l; j++) {
-        pairs.push(`${arrayKey}=${encode(value[j])}`);
-      }
-    } else {
-      pairs.push(`${encodeKey(key)}=${encode(value)}`);
-    }
+    pairs = pairs.concat(buildParam(key, params[key]));
   }
 
   if (pairs.length === 0) {
@@ -144,9 +156,54 @@ export function buildQueryString(params: Object): string {
 }
 
 /**
+* Process parameter that was recognized as scalar param (primitive value or shallow array).
+*
+* @param existedParam Object with previously parsed values for specified key.
+* @param value Parameter value to append.
+* @param isPrimitive If true and parameter value already specified - method overwrites it. If false - transofrm parameter to array and append new value to it.
+* @returns Initial primitive value or transformed existedParam if parameter was recognized as an array.
+*/
+function processScalarParam(existedParam: Object, value: Object, isPrimitive: boolean): Object {
+  if (Array.isArray(existedParam)) {
+    // value is already an array, so push on the next value.
+    existedParam.push(value);
+    return existedParam;
+  }
+  if (existedParam !== undefined) {
+    // value isn't an array, but since a second value has been specified,
+    // convert value into an array.
+    return isPrimitive ? value : [existedParam, value];
+  }
+  // value is a scalar.
+  return value;
+}
+/**
+* Sequentially process parameter that was recognized as complex value (object or array).
+* For each keys part, if the current level is undefined create an
+*   object or array based on the type of the next keys part.
+*
+* @param queryParams root-level result object.
+* @param keys Collection of keys related to this parameter.
+* @param value Parameter value to append.
+*/
+function parseComplexParam(queryParams: Object, keys: Object, value: any): void {
+  let currentParams = queryParams;
+  let keysLastIndex = keys.length - 1;
+  for (let j = 0; j <= keysLastIndex; j++) {
+    let key = keys[j] === '' ? currentParams.length : keys[j];
+    if (j < keysLastIndex) {
+      currentParams = currentParams[key] = currentParams[key] || (keys[j + 1] ? {} : []);
+    } else {
+      currentParams = currentParams[key] = value;
+    }
+  }
+}
+
+
+/**
 * Parse a query string.
 *
-* @param The query string to parse.
+* @param queryString The query string to parse.
 * @returns Object with keys and values mapped from the query string.
 */
 export function parseQueryString(queryString: string): Object {
@@ -160,37 +217,40 @@ export function parseQueryString(queryString: string): Object {
     query = query.substr(1);
   }
 
-  let pairs = query.split('&');
+  let pairs = query.replace(/\+/g, ' ').split('&');
   for (let i = 0; i < pairs.length; i++) {
     let pair = pairs[i].split('=');
     let key = decodeURIComponent(pair[0]);
-    let keyLength = key.length;
-    let isArray = false;
-    let value;
-
+    let isPrimitive = false;
     if (!key) {
       continue;
-    } else if (pair.length === 1) {
-      value = true;
-    } else {
-      //Handle arrays
-      if (keyLength > 2 && key.slice(keyLength - 2) === '[]') {
-        isArray = true;
-        key = key.slice(0, keyLength - 2);
-        if (!queryParams[key]) {
-          queryParams[key] = [];
-        }
-      }
+    }
+    //split object key into its parts
+    let keys = key.split('][');
+    let keysLastIndex = keys.length - 1;
 
-      value = pair[1] ? decodeURIComponent(pair[1]) : '';
+    // If the first keys part contains [ and the last ends with ], then []
+    // are correctly balanced, split key to parts
+    //Else it's basic key
+    if (/\[/.test(keys[0]) && /\]$/.test(keys[keysLastIndex])) {
+      keys[keysLastIndex] = keys[keysLastIndex].replace(/\]$/, '');
+      keys = keys.shift().split('[').concat(keys);
+      keysLastIndex = keys.length - 1;
+    } else {
+      isPrimitive = true;
+      keysLastIndex = 0;
     }
 
-    if (isArray) {
-      queryParams[key].push(value);
+    if (pair.length === 2) {
+      let value = pair[1] ? decodeURIComponent(pair[1]) : '';
+      if (keysLastIndex) {
+        parseComplexParam(queryParams, keys, value);
+      } else {
+        queryParams[key] = processScalarParam(queryParams[key], value, isPrimitive);
+      }
     } else {
-      queryParams[key] = value;
+      queryParams[key] = true;
     }
   }
-
   return queryParams;
 }
