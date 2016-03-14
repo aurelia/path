@@ -192,7 +192,7 @@ function parseComplexParam(queryParams: Object, keys: Object, value: any): void 
   for (let j = 0; j <= keysLastIndex; j++) {
     let key = keys[j] === '' ? currentParams.length : keys[j];
     if (j < keysLastIndex) {
-      currentParams = currentParams[key] = currentParams[key] || (keys[j + 1] ? {} : []);
+      currentParams = currentParams[key] = currentParams[key] || (isNaN(keys[j + 1]) ? {} : []);
     } else {
       currentParams = currentParams[key] = value;
     }
