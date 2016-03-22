@@ -1,6 +1,11 @@
 'use strict';
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 exports.relativeToFile = relativeToFile;
 exports.join = join;
 exports.buildQueryString = buildQueryString;
@@ -49,7 +54,7 @@ function join(path1, path2) {
   var scheme = schemeMatch && schemeMatch.length > 0 ? schemeMatch[1] : '';
   path1 = path1.substr(scheme.length);
 
-  var urlPrefix = undefined;
+  var urlPrefix = void 0;
   if (path1.indexOf('///') === 0 && scheme === 'file:') {
     urlPrefix = '///';
   } else if (path1.indexOf('//') === 0) {
@@ -76,13 +81,13 @@ function join(path1, path2) {
     }
   }
 
-  for (var i = 0, ii = url2.length; i < ii; ++i) {
-    if (url2[i] === '..') {
+  for (var _i = 0, _ii = url2.length; _i < _ii; ++_i) {
+    if (url2[_i] === '..') {
       url3.pop();
-    } else if (url2[i] === '.' || url2[i] === '') {
+    } else if (url2[_i] === '.' || url2[_i] === '') {
       continue;
     } else {
-      url3.push(url2[i]);
+      url3.push(url2[_i]);
     }
   }
 
@@ -101,10 +106,10 @@ function buildParam(key, value) {
   }
   if (Array.isArray(value)) {
     for (var i = 0, l = value.length; i < l; i++) {
-      var arrayKey = key + '[' + (typeof value[i] === 'object' && value[i] !== null ? i : '') + ']';
+      var arrayKey = key + '[' + (_typeof(value[i]) === 'object' && value[i] !== null ? i : '') + ']';
       result = result.concat(buildParam(arrayKey, value[i]));
     }
-  } else if (typeof value === 'object') {
+  } else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
     for (var propertyName in value) {
       result = result.concat(buildParam(key + '[' + propertyName + ']', value[propertyName]));
     }
@@ -147,7 +152,7 @@ function parseComplexParam(queryParams, keys, value) {
   for (var j = 0; j <= keysLastIndex; j++) {
     var key = keys[j] === '' ? currentParams.length : keys[j];
     if (j < keysLastIndex) {
-      currentParams = currentParams[key] = currentParams[key] || (keys[j + 1] ? {} : []);
+      currentParams = currentParams[key] = currentParams[key] || (isNaN(keys[j + 1]) ? {} : []);
     } else {
       currentParams = currentParams[key] = value;
     }
