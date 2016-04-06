@@ -191,7 +191,7 @@ function parseQueryString(queryString) {
       keysLastIndex = 0;
     }
 
-    if (pair.length === 2) {
+    if (pair.length >= 2) {
       var value = pair[1] ? decodeURIComponent(pair[1]) : '';
       if (keysLastIndex) {
         parseComplexParam(queryParams, keys, value);

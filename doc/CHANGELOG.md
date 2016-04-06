@@ -1,3 +1,8 @@
+### 1.0.0-beta.1.2.1 (2016-04-06)
+
+* Fix for query string return true for param with equal sign on the end
+* Added Unit tests for Fix for query string return true for param with equal sign on the end
+
 ### 1.0.0-beta.1.2.0 (2016-03-22)
 
 * Update to Babel 6
