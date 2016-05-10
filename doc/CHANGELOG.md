@@ -1,3 +1,6 @@
+### 1.0.0-beta.1.2.2 (2016-05-10)
+
+
 ### 1.0.0-beta.1.2.1 (2016-04-06)
 
 * Fix for query string return true for param with equal sign on the end

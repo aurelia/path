@@ -161,8 +161,8 @@
           "kindString": "Call signature",
           "flags": {},
           "comment": {
-            "shortText": "Calcualtes a path relative to a file.",
-            "returns": "The calcualted path.\n"
+            "shortText": "Calculates a path relative to a file.",
+            "returns": "The calculated path.\n"
           },
           "parameters": [
             {
