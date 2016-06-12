@@ -3,6 +3,7 @@
 [![npm Version](https://img.shields.io/npm/v/aurelia-path.svg)](https://www.npmjs.com/package/aurelia-path)
 [![ZenHub](https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png)](https://zenhub.io)
 [![Join the chat at https://gitter.im/aurelia/discuss](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/aurelia/discuss?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![CircleCI](https://circleci.com/gh/aurelia/path.svg?style=shield)](https://circleci.com/gh/aurelia/path)
 
 This library is part of the [Aurelia](http://www.aurelia.io/) platform and contains utilities for path manipulation.
 
