@@ -10,6 +10,7 @@ exports.relativeToFile = relativeToFile;
 exports.join = join;
 exports.buildQueryString = buildQueryString;
 exports.parseQueryString = parseQueryString;
+
 function trimDots(ary) {
   for (var i = 0; i < ary.length; ++i) {
     var part = ary[i];

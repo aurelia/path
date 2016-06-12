@@ -1,3 +1,4 @@
+
 function trimDots(ary: string[]): void {
   for (let i = 0; i < ary.length; ++i) {
     let part = ary[i];

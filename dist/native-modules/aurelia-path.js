@@ -1,7 +1,8 @@
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 function trimDots(ary) {
-  for (let i = 0; i < ary.length; ++i) {
-    let part = ary[i];
+  for (var i = 0; i < ary.length; ++i) {
+    var part = ary[i];
     if (part === '.') {
       ary.splice(i, 1);
       i -= 1;
@@ -17,12 +18,12 @@ function trimDots(ary) {
 }
 
 export function relativeToFile(name, file) {
-  let fileParts = file && file.split('/');
-  let nameParts = name.trim().split('/');
+  var fileParts = file && file.split('/');
+  var nameParts = name.trim().split('/');
 
   if (nameParts[0].charAt(0) === '.' && fileParts) {
-    let normalizedBaseParts = fileParts.slice(0, fileParts.length - 1);
-    nameParts.unshift(...normalizedBaseParts);
+    var normalizedBaseParts = fileParts.slice(0, fileParts.length - 1);
+    nameParts.unshift.apply(nameParts, normalizedBaseParts);
   }
 
   trimDots(nameParts);
@@ -39,11 +40,11 @@ export function join(path1, path2) {
     return path1;
   }
 
-  let schemeMatch = path1.match(/^([^/]*?:)\//);
-  let scheme = schemeMatch && schemeMatch.length > 0 ? schemeMatch[1] : '';
+  var schemeMatch = path1.match(/^([^/]*?:)\//);
+  var scheme = schemeMatch && schemeMatch.length > 0 ? schemeMatch[1] : '';
   path1 = path1.substr(scheme.length);
 
-  let urlPrefix;
+  var urlPrefix = void 0;
   if (path1.indexOf('///') === 0 && scheme === 'file:') {
     urlPrefix = '///';
   } else if (path1.indexOf('//') === 0) {
@@ -54,13 +55,13 @@ export function join(path1, path2) {
     urlPrefix = '';
   }
 
-  let trailingSlash = path2.slice(-1) === '/' ? '/' : '';
+  var trailingSlash = path2.slice(-1) === '/' ? '/' : '';
 
-  let url1 = path1.split('/');
-  let url2 = path2.split('/');
-  let url3 = [];
+  var url1 = path1.split('/');
+  var url2 = path2.split('/');
+  var url3 = [];
 
-  for (let i = 0, ii = url1.length; i < ii; ++i) {
+  for (var i = 0, ii = url1.length; i < ii; ++i) {
     if (url1[i] === '..') {
       url3.pop();
     } else if (url1[i] === '.' || url1[i] === '') {
@@ -70,47 +71,49 @@ export function join(path1, path2) {
     }
   }
 
-  for (let i = 0, ii = url2.length; i < ii; ++i) {
-    if (url2[i] === '..') {
+  for (var _i = 0, _ii = url2.length; _i < _ii; ++_i) {
+    if (url2[_i] === '..') {
       url3.pop();
-    } else if (url2[i] === '.' || url2[i] === '') {
+    } else if (url2[_i] === '.' || url2[_i] === '') {
       continue;
     } else {
-      url3.push(url2[i]);
+      url3.push(url2[_i]);
     }
   }
 
   return scheme + urlPrefix + url3.join('/') + trailingSlash;
 }
 
-let encode = encodeURIComponent;
-let encodeKey = k => encode(k).replace('%24', '$');
+var encode = encodeURIComponent;
+var encodeKey = function encodeKey(k) {
+  return encode(k).replace('%24', '$');
+};
 
 function buildParam(key, value) {
-  let result = [];
+  var result = [];
   if (value === null || value === undefined) {
     return result;
   }
   if (Array.isArray(value)) {
-    for (let i = 0, l = value.length; i < l; i++) {
-      let arrayKey = key + '[' + (typeof value[i] === 'object' && value[i] !== null ? i : '') + ']';
+    for (var i = 0, l = value.length; i < l; i++) {
+      var arrayKey = key + '[' + (_typeof(value[i]) === 'object' && value[i] !== null ? i : '') + ']';
       result = result.concat(buildParam(arrayKey, value[i]));
     }
-  } else if (typeof value === 'object') {
-    for (let propertyName in value) {
+  } else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
+    for (var propertyName in value) {
       result = result.concat(buildParam(key + '[' + propertyName + ']', value[propertyName]));
     }
   } else {
-    result.push(`${ encodeKey(key) }=${ encode(value) }`);
+    result.push(encodeKey(key) + '=' + encode(value));
   }
   return result;
 }
 
 export function buildQueryString(params) {
-  let pairs = [];
-  let keys = Object.keys(params || {}).sort();
-  for (let i = 0, len = keys.length; i < len; i++) {
-    let key = keys[i];
+  var pairs = [];
+  var keys = Object.keys(params || {}).sort();
+  for (var i = 0, len = keys.length; i < len; i++) {
+    var key = keys[i];
     pairs = pairs.concat(buildParam(key, params[key]));
   }
 
@@ -134,10 +137,10 @@ function processScalarParam(existedParam, value, isPrimitive) {
 }
 
 function parseComplexParam(queryParams, keys, value) {
-  let currentParams = queryParams;
-  let keysLastIndex = keys.length - 1;
-  for (let j = 0; j <= keysLastIndex; j++) {
-    let key = keys[j] === '' ? currentParams.length : keys[j];
+  var currentParams = queryParams;
+  var keysLastIndex = keys.length - 1;
+  for (var j = 0; j <= keysLastIndex; j++) {
+    var key = keys[j] === '' ? currentParams.length : keys[j];
     if (j < keysLastIndex) {
       currentParams = currentParams[key] = currentParams[key] || (isNaN(keys[j + 1]) ? {} : []);
     } else {
@@ -147,27 +150,27 @@ function parseComplexParam(queryParams, keys, value) {
 }
 
 export function parseQueryString(queryString) {
-  let queryParams = {};
+  var queryParams = {};
   if (!queryString || typeof queryString !== 'string') {
     return queryParams;
   }
 
-  let query = queryString;
+  var query = queryString;
   if (query.charAt(0) === '?') {
     query = query.substr(1);
   }
 
-  let pairs = query.replace(/\+/g, ' ').split('&');
-  for (let i = 0; i < pairs.length; i++) {
-    let pair = pairs[i].split('=');
-    let key = decodeURIComponent(pair[0]);
-    let isPrimitive = false;
+  var pairs = query.replace(/\+/g, ' ').split('&');
+  for (var i = 0; i < pairs.length; i++) {
+    var pair = pairs[i].split('=');
+    var key = decodeURIComponent(pair[0]);
+    var isPrimitive = false;
     if (!key) {
       continue;
     }
 
-    let keys = key.split('][');
-    let keysLastIndex = keys.length - 1;
+    var keys = key.split('][');
+    var keysLastIndex = keys.length - 1;
 
     if (/\[/.test(keys[0]) && /\]$/.test(keys[keysLastIndex])) {
       keys[keysLastIndex] = keys[keysLastIndex].replace(/\]$/, '');
@@ -179,7 +182,7 @@ export function parseQueryString(queryString) {
     }
 
     if (pair.length >= 2) {
-      let value = pair[1] ? decodeURIComponent(pair[1]) : '';
+      var value = pair[1] ? decodeURIComponent(pair[1]) : '';
       if (keysLastIndex) {
         parseComplexParam(queryParams, keys, value);
       } else {
