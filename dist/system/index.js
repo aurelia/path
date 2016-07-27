@@ -8,7 +8,7 @@ System.register(['./aurelia-path'], function (_export, _context) {
       var _exportObj = {};
 
       for (var _key in _aureliaPath) {
-        if (_key !== "default") _exportObj[_key] = _aureliaPath[_key];
+        if (_key !== "default" && key !== "__esModule") _exportObj[_key] = _aureliaPath[_key];
       }
 
       _export(_exportObj);
