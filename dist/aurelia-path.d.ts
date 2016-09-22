@@ -21,9 +21,10 @@ export declare function join(path1: string, path2: string): string;
 * Generate a query string from an object.
 *
 * @param params Object containing the keys and values to be used.
+* @param traditional Boolean Use the old URI template standard (RFC6570)
 * @returns The generated query string, excluding leading '?'.
 */
-export declare function buildQueryString(params: Object): string;
+export declare function buildQueryString(params: Object, traditional: Boolean): string;
 
 /**
 * Parse a query string.

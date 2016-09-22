@@ -114,19 +114,24 @@ let encodeKey = k => encode(k).replace('%24', '$');
 *
 * @param key Parameter name for query string.
 * @param value Parameter value to deserialize.
+* @param traditional Boolean Use the old URI template standard (RFC6570)
 * @return Array with serialized parameter(s)
 */
-function buildParam(key: string, value: any): Array<string> {
+function buildParam(key: string, value: any, traditional: boolean): Array<string> {
   let result = [];
   if (value === null || value === undefined) {
     return result;
   }
   if (Array.isArray(value)) {
     for (let i = 0, l = value.length; i < l; i++) {
-      let arrayKey = key + '[' + (typeof value[i] === 'object' && value[i] !== null ? i : '') + ']';
-      result = result.concat(buildParam(arrayKey, value[i]));
+      if (traditional) {
+        result.push(`${encodeKey(key)}=${encode(value[i])}`);
+      } else {
+        let arrayKey = key + '[' + (typeof value[i] === 'object' && value[i] !== null ? i : '') + ']';
+        result = result.concat(buildParam(arrayKey, value[i]));
+      }
     }
-  } else if (typeof (value) === 'object') {
+  } else if (typeof (value) === 'object' && !traditional) {
     for (let propertyName in value) {
       result = result.concat(buildParam(key + '[' + propertyName + ']', value[propertyName]));
     }
@@ -140,14 +145,15 @@ function buildParam(key: string, value: any): Array<string> {
 * Generate a query string from an object.
 *
 * @param params Object containing the keys and values to be used.
+* @param traditional Boolean Use the old URI template standard (RFC6570)
 * @returns The generated query string, excluding leading '?'.
 */
-export function buildQueryString(params: Object): string {
+export function buildQueryString(params: Object, traditional: Boolean): string {
   let pairs = [];
   let keys = Object.keys(params || {}).sort();
   for (let i = 0, len = keys.length; i < len; i++) {
     let key = keys[i];
-    pairs = pairs.concat(buildParam(key, params[key]));
+    pairs = pairs.concat(buildParam(key, params[key], traditional));
   }
 
   if (pairs.length === 0) {
@@ -162,10 +168,9 @@ export function buildQueryString(params: Object): string {
 *
 * @param existedParam Object with previously parsed values for specified key.
 * @param value Parameter value to append.
-* @param isPrimitive If true and parameter value already specified - method overwrites it. If false - transofrm parameter to array and append new value to it.
 * @returns Initial primitive value or transformed existedParam if parameter was recognized as an array.
 */
-function processScalarParam(existedParam: Object, value: Object, isPrimitive: boolean): Object {
+function processScalarParam(existedParam: Object, value: Object): Object {
   if (Array.isArray(existedParam)) {
     // value is already an array, so push on the next value.
     existedParam.push(value);
@@ -174,7 +179,7 @@ function processScalarParam(existedParam: Object, value: Object, isPrimitive: bo
   if (existedParam !== undefined) {
     // value isn't an array, but since a second value has been specified,
     // convert value into an array.
-    return isPrimitive ? value : [existedParam, value];
+    return [existedParam, value];
   }
   // value is a scalar.
   return value;
@@ -194,7 +199,10 @@ function parseComplexParam(queryParams: Object, keys: Object, value: any): void 
   for (let j = 0; j <= keysLastIndex; j++) {
     let key = keys[j] === '' ? currentParams.length : keys[j];
     if (j < keysLastIndex) {
-      currentParams = currentParams[key] = currentParams[key] || (isNaN(keys[j + 1]) ? {} : []);
+      // The value has to be an array or a false value
+      // It can happen that the value is no array if the key was repeated with traditional style like `list=1&list[]=2`
+      let prevValue = !currentParams[key] || typeof currentParams[key] === 'object' ? currentParams[key] : [currentParams[key]];
+      currentParams = currentParams[key] = prevValue || (isNaN(keys[j + 1]) ? {} : []);
     } else {
       currentParams = currentParams[key] = value;
     }
@@ -223,7 +231,6 @@ export function parseQueryString(queryString: string): Object {
   for (let i = 0; i < pairs.length; i++) {
     let pair = pairs[i].split('=');
     let key = decodeURIComponent(pair[0]);
-    let isPrimitive = false;
     if (!key) {
       continue;
     }
@@ -239,7 +246,6 @@ export function parseQueryString(queryString: string): Object {
       keys = keys.shift().split('[').concat(keys);
       keysLastIndex = keys.length - 1;
     } else {
-      isPrimitive = true;
       keysLastIndex = 0;
     }
 
@@ -248,7 +254,7 @@ export function parseQueryString(queryString: string): Object {
       if (keysLastIndex) {
         parseComplexParam(queryParams, keys, value);
       } else {
-        queryParams[key] = processScalarParam(queryParams[key], value, isPrimitive);
+        queryParams[key] = processScalarParam(queryParams[key], value);
       }
     } else {
       queryParams[key] = true;

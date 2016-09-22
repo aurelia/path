@@ -1,3 +1,10 @@
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/aurelia/path/compare/1.0.0...v1.1.0) (2016-09-22)
+
+#### Features
+
+* **queries:** Build and parse queries also in traditional style
+
 <a name="1.0.0"></a>
 # [1.0.0](https://github.com/aurelia/path/compare/1.0.0-rc.1.0.0...v1.0.0) (2016-07-27)
 

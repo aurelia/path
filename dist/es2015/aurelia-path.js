@@ -86,17 +86,21 @@ export function join(path1, path2) {
 let encode = encodeURIComponent;
 let encodeKey = k => encode(k).replace('%24', '$');
 
-function buildParam(key, value) {
+function buildParam(key, value, traditional) {
   let result = [];
   if (value === null || value === undefined) {
     return result;
   }
   if (Array.isArray(value)) {
     for (let i = 0, l = value.length; i < l; i++) {
-      let arrayKey = key + '[' + (typeof value[i] === 'object' && value[i] !== null ? i : '') + ']';
-      result = result.concat(buildParam(arrayKey, value[i]));
+      if (traditional) {
+        result.push(`${ encodeKey(key) }=${ encode(value[i]) }`);
+      } else {
+        let arrayKey = key + '[' + (typeof value[i] === 'object' && value[i] !== null ? i : '') + ']';
+        result = result.concat(buildParam(arrayKey, value[i]));
+      }
     }
-  } else if (typeof value === 'object') {
+  } else if (typeof value === 'object' && !traditional) {
     for (let propertyName in value) {
       result = result.concat(buildParam(key + '[' + propertyName + ']', value[propertyName]));
     }
@@ -106,12 +110,12 @@ function buildParam(key, value) {
   return result;
 }
 
-export function buildQueryString(params) {
+export function buildQueryString(params, traditional) {
   let pairs = [];
   let keys = Object.keys(params || {}).sort();
   for (let i = 0, len = keys.length; i < len; i++) {
     let key = keys[i];
-    pairs = pairs.concat(buildParam(key, params[key]));
+    pairs = pairs.concat(buildParam(key, params[key], traditional));
   }
 
   if (pairs.length === 0) {
@@ -121,13 +125,13 @@ export function buildQueryString(params) {
   return pairs.join('&');
 }
 
-function processScalarParam(existedParam, value, isPrimitive) {
+function processScalarParam(existedParam, value) {
   if (Array.isArray(existedParam)) {
     existedParam.push(value);
     return existedParam;
   }
   if (existedParam !== undefined) {
-    return isPrimitive ? value : [existedParam, value];
+    return [existedParam, value];
   }
 
   return value;
@@ -139,7 +143,8 @@ function parseComplexParam(queryParams, keys, value) {
   for (let j = 0; j <= keysLastIndex; j++) {
     let key = keys[j] === '' ? currentParams.length : keys[j];
     if (j < keysLastIndex) {
-      currentParams = currentParams[key] = currentParams[key] || (isNaN(keys[j + 1]) ? {} : []);
+      let prevValue = !currentParams[key] || typeof currentParams[key] === 'object' ? currentParams[key] : [currentParams[key]];
+      currentParams = currentParams[key] = prevValue || (isNaN(keys[j + 1]) ? {} : []);
     } else {
       currentParams = currentParams[key] = value;
     }
@@ -161,7 +166,6 @@ export function parseQueryString(queryString) {
   for (let i = 0; i < pairs.length; i++) {
     let pair = pairs[i].split('=');
     let key = decodeURIComponent(pair[0]);
-    let isPrimitive = false;
     if (!key) {
       continue;
     }
@@ -174,7 +178,6 @@ export function parseQueryString(queryString) {
       keys = keys.shift().split('[').concat(keys);
       keysLastIndex = keys.length - 1;
     } else {
-      isPrimitive = true;
       keysLastIndex = 0;
     }
 
@@ -183,7 +186,7 @@ export function parseQueryString(queryString) {
       if (keysLastIndex) {
         parseComplexParam(queryParams, keys, value);
       } else {
-        queryParams[key] = processScalarParam(queryParams[key], value, isPrimitive);
+        queryParams[key] = processScalarParam(queryParams[key], value);
       }
     } else {
       queryParams[key] = true;

@@ -104,17 +104,21 @@ define(['exports'], function (exports) {
     return encode(k).replace('%24', '$');
   };
 
-  function buildParam(key, value) {
+  function buildParam(key, value, traditional) {
     var result = [];
     if (value === null || value === undefined) {
       return result;
     }
     if (Array.isArray(value)) {
       for (var i = 0, l = value.length; i < l; i++) {
-        var arrayKey = key + '[' + (_typeof(value[i]) === 'object' && value[i] !== null ? i : '') + ']';
-        result = result.concat(buildParam(arrayKey, value[i]));
+        if (traditional) {
+          result.push(encodeKey(key) + '=' + encode(value[i]));
+        } else {
+          var arrayKey = key + '[' + (_typeof(value[i]) === 'object' && value[i] !== null ? i : '') + ']';
+          result = result.concat(buildParam(arrayKey, value[i]));
+        }
       }
-    } else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
+    } else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && !traditional) {
       for (var propertyName in value) {
         result = result.concat(buildParam(key + '[' + propertyName + ']', value[propertyName]));
       }
@@ -124,12 +128,12 @@ define(['exports'], function (exports) {
     return result;
   }
 
-  function buildQueryString(params) {
+  function buildQueryString(params, traditional) {
     var pairs = [];
     var keys = Object.keys(params || {}).sort();
     for (var i = 0, len = keys.length; i < len; i++) {
       var key = keys[i];
-      pairs = pairs.concat(buildParam(key, params[key]));
+      pairs = pairs.concat(buildParam(key, params[key], traditional));
     }
 
     if (pairs.length === 0) {
@@ -139,13 +143,13 @@ define(['exports'], function (exports) {
     return pairs.join('&');
   }
 
-  function processScalarParam(existedParam, value, isPrimitive) {
+  function processScalarParam(existedParam, value) {
     if (Array.isArray(existedParam)) {
       existedParam.push(value);
       return existedParam;
     }
     if (existedParam !== undefined) {
-      return isPrimitive ? value : [existedParam, value];
+      return [existedParam, value];
     }
 
     return value;
@@ -157,7 +161,8 @@ define(['exports'], function (exports) {
     for (var j = 0; j <= keysLastIndex; j++) {
       var key = keys[j] === '' ? currentParams.length : keys[j];
       if (j < keysLastIndex) {
-        currentParams = currentParams[key] = currentParams[key] || (isNaN(keys[j + 1]) ? {} : []);
+        var prevValue = !currentParams[key] || _typeof(currentParams[key]) === 'object' ? currentParams[key] : [currentParams[key]];
+        currentParams = currentParams[key] = prevValue || (isNaN(keys[j + 1]) ? {} : []);
       } else {
         currentParams = currentParams[key] = value;
       }
@@ -179,7 +184,6 @@ define(['exports'], function (exports) {
     for (var i = 0; i < pairs.length; i++) {
       var pair = pairs[i].split('=');
       var key = decodeURIComponent(pair[0]);
-      var isPrimitive = false;
       if (!key) {
         continue;
       }
@@ -192,7 +196,6 @@ define(['exports'], function (exports) {
         keys = keys.shift().split('[').concat(keys);
         keysLastIndex = keys.length - 1;
       } else {
-        isPrimitive = true;
         keysLastIndex = 0;
       }
 
@@ -201,7 +204,7 @@ define(['exports'], function (exports) {
         if (keysLastIndex) {
           parseComplexParam(queryParams, keys, value);
         } else {
-          queryParams[key] = processScalarParam(queryParams[key], value, isPrimitive);
+          queryParams[key] = processScalarParam(queryParams[key], value);
         }
       } else {
         queryParams[key] = true;
