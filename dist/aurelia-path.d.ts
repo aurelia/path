@@ -24,7 +24,7 @@ export declare function join(path1: string, path2: string): string;
 * @param traditional Boolean Use the old URI template standard (RFC6570)
 * @returns The generated query string, excluding leading '?'.
 */
-export declare function buildQueryString(params: Object, traditional: Boolean): string;
+export declare function buildQueryString(params: Object, traditional?: Boolean): string;
 
 /**
 * Parse a query string.

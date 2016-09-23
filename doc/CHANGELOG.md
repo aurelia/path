@@ -1,3 +1,13 @@
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/aurelia/path/compare/1.1.0...v1.1.1) (2016-09-23)
+
+
+### Bug Fixes
+
+* **index:** ensure new traditional param is marked as optional ([fc600e5](https://github.com/aurelia/path/commit/fc600e5))
+
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/aurelia/path/compare/1.0.0...v1.1.0) (2016-09-22)
 
