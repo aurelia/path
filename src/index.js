@@ -116,7 +116,7 @@ let encodeKey = k => encode(k).replace('%24', '$');
 * @param traditional Boolean Use the old URI template standard (RFC6570)
 * @return Array with serialized parameter(s)
 */
-function buildParam(key: string, value: any, traditional: boolean): Array<string> {
+function buildParam(key: string, value: any, traditional?: boolean): Array<string> {
   let result = [];
   if (value === null || value === undefined) {
     return result;
@@ -147,7 +147,7 @@ function buildParam(key: string, value: any, traditional: boolean): Array<string
 * @param traditional Boolean Use the old URI template standard (RFC6570)
 * @returns The generated query string, excluding leading '?'.
 */
-export function buildQueryString(params: Object, traditional: Boolean): string {
+export function buildQueryString(params: Object, traditional?: Boolean): string {
   let pairs = [];
   let keys = Object.keys(params || {}).sort();
   for (let i = 0, len = keys.length; i < len; i++) {
