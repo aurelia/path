@@ -261,8 +261,8 @@ describe('query strings', () => {
     expect(parse('a=b&&c=d')).toEqual({ a: 'b', c: 'd' });
     expect(parse('a=b&a=c')).toEqual({ a: ['b', 'c'] });
     
-    expect(parse('a=b&c=d=')).toEqual({ a: 'b', c: 'd' });
-    expect(parse('a=b&c=d==')).toEqual({ a: 'b', c: 'd' });
+    expect(parse('a=b&c=d=')).toEqual({ a: 'b', c: 'd=' });
+    expect(parse('a=b&c=d==')).toEqual({ a: 'b', c: 'd==' });
 
     expect(parse('a=%26')).toEqual({ a: '&' });
     expect(parse('%26=a')).toEqual({ '&': 'a' });

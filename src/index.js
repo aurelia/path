@@ -249,7 +249,8 @@ export function parseQueryString(queryString: string): Object {
     }
 
     if (pair.length >= 2) {
-      let value = pair[1] ? decodeURIComponent(pair[1]) : '';
+      pair.shift();
+      let value = decodeURIComponent(pair.join('=')) || '';
       if (keysLastIndex) {
         parseComplexParam(queryParams, keys, value);
       } else {
