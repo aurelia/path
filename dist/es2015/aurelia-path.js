@@ -94,7 +94,7 @@ function buildParam(key, value, traditional) {
   if (Array.isArray(value)) {
     for (let i = 0, l = value.length; i < l; i++) {
       if (traditional) {
-        result.push(`${ encodeKey(key) }=${ encode(value[i]) }`);
+        result.push(`${encodeKey(key)}=${encode(value[i])}`);
       } else {
         let arrayKey = key + '[' + (typeof value[i] === 'object' && value[i] !== null ? i : '') + ']';
         result = result.concat(buildParam(arrayKey, value[i]));
@@ -105,7 +105,7 @@ function buildParam(key, value, traditional) {
       result = result.concat(buildParam(key + '[' + propertyName + ']', value[propertyName]));
     }
   } else {
-    result.push(`${ encodeKey(key) }=${ encode(value) }`);
+    result.push(`${encodeKey(key)}=${encode(value)}`);
   }
   return result;
 }
