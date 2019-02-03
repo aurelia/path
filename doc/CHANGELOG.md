@@ -1,3 +1,8 @@
+<a name="1.1.3"></a>
+## [1.1.3](https://github.com/aurelia/path/compare/1.1.2...1.1.3) (2019-02-03)
+
+
+
 <a name="1.1.2"></a>
 ## [1.1.2](https://github.com/aurelia/path/compare/1.1.1...1.1.2) (2019-01-18)
 
