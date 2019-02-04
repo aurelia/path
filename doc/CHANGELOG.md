@@ -1,5 +1,5 @@
 <a name="1.1.3"></a>
-## [1.1.3](https://github.com/aurelia/path/compare/1.1.2...1.1.3) (2019-02-03)
+## [1.1.3](https://github.com/aurelia/path/compare/1.1.2...1.1.3) (2019-02-04)
 
 
 ### Bug Fixes
