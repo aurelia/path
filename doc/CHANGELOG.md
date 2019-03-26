@@ -1,3 +1,13 @@
+<a name="1.1.4"></a>
+## [1.1.4](https://github.com/aurelia/path/compare/1.1.2...1.1.4) (2019-03-26)
+
+
+### Bug Fixes
+
+* **all:** change es2015 back to native-modules ([3a13e2f](https://github.com/aurelia/path/commit/3a13e2f))
+
+
+
 <a name="1.1.3"></a>
 ## [1.1.3](https://github.com/aurelia/path/compare/1.1.2...1.1.3) (2019-02-04)
 
