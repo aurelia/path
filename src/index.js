@@ -226,7 +226,7 @@ export function parseQueryString(queryString: string): Object {
     query = query.substr(1);
   }
 
-  let pairs = query.replace(/\+/g, ' ').split('&');
+  let pairs = query.split('&');
   for (let i = 0; i < pairs.length; i++) {
     let pair = pairs[i].split('=');
     let key = decodeURIComponent(pair[0]);

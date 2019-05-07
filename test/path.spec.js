@@ -272,5 +272,7 @@ describe('query strings', () => {
     expect(parse('a[b][c][d]=e')).toEqual({a: {b: {c: {d: 'e'}}}});
     expect(parse('a[b][]=c&a[b][]=d&a[b][2][]=f&a[b][2][]=g')).toEqual({a: {b: ['c','d', ['f', 'g']]}});
     expect(parse('a[0]=b')).toEqual({a: ['b']});
+
+    expect(parse('a=b+c')).toEqual({a: 'b+c'});
   });
 });
