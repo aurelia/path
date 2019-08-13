@@ -85,7 +85,14 @@ export function join(path1: string, path2: string): string {
 
   for (let i = 0, ii = url1.length; i < ii; ++i) {
     if (url1[i] === '..') {
-      url3.pop();
+      // retain leading ..
+      // don't pop out previous ..
+      // retain consecutive ../../..
+      if (url3.length && url3[url3.length - 1] !== '..') {
+        url3.pop();
+      } else {
+        url3.push(url1[i]);
+      }
     } else if (url1[i] === '.' || url1[i] === '') {
       continue;
     } else {
@@ -95,7 +102,11 @@ export function join(path1: string, path2: string): string {
 
   for (let i = 0, ii = url2.length; i < ii; ++i) {
     if (url2[i] === '..') {
-      url3.pop();
+      if (url3.length && url3[url3.length - 1] !== '..') {
+        url3.pop();
+      } else {
+        url3.push(url2[i]);
+      }
     } else if (url2[i] === '.' || url2[i] === '') {
       continue;
     } else {
