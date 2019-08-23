@@ -171,6 +171,41 @@ describe('join', () => {
     expect(join(path1, path2)).toBe('one');
   });
 
+  it('should retain leading .. in path1', () => {
+    var path1 = '../one';
+    var path2 = './two';
+
+    expect(join(path1, path2)).toBe('../one/two');
+  });
+
+  it('should retain consecutive leading .. in path1', () => {
+    var path1 = '../../one';
+    var path2 = './two';
+
+    expect(join(path1, path2)).toBe('../../one/two');
+  });
+
+  it('should handle .. in path1 and path2', () => {
+    var path1 = '../../one';
+    var path2 = '../two';
+
+    expect(join(path1, path2)).toBe('../../two');
+  });
+
+  it('should merge .. in path1 and path2', () => {
+    var path1 = '../../one';
+    var path2 = '../../two';
+
+    expect(join(path1, path2)).toBe('../../../two');
+  });
+
+  it('should retain consecutive leading .. but not other .. in path1', () => {
+    var path1 = '../../one/../three';
+    var path2 = './two';
+
+    expect(join(path1, path2)).toBe('../../three/two');
+  });
+
   it('should respect a trailing slash', () => {
     var path1 = 'one/';
     var path2 = 'two/';
@@ -236,7 +271,7 @@ describe('query strings', () => {
     expect(gen({ obj: { a: 5, b: "str", c: false } })).toBe('obj%5Ba%5D=5&obj%5Bb%5D=str&obj%5Bc%5D=false');
     expect(gen({ obj: { a: 5, b: "str", c: false } }, true)).toBe('obj=%5Bobject%20Object%5D');
     expect(gen({ obj:{ a: 5, b: undefined}})).toBe('obj%5Ba%5D=5');
-        
+
     expect(gen({a: {b: ['c','d', ['f', 'g']]}})).toBe('a%5Bb%5D%5B%5D=c&a%5Bb%5D%5B%5D=d&a%5Bb%5D%5B2%5D%5B%5D=f&a%5Bb%5D%5B2%5D%5B%5D=g');
     expect(gen({a: {b: ['c','d', ['f', 'g']]}}, true)).toBe('a=%5Bobject%20Object%5D');
     expect(gen({a: ['c','d', ['f', 'g']]}, true)).toBe('a=c&a=d&a=f%2Cg');
@@ -260,14 +295,14 @@ describe('query strings', () => {
     expect(parse('a=b&c=d')).toEqual({ a: 'b', c: 'd' });
     expect(parse('a=b&&c=d')).toEqual({ a: 'b', c: 'd' });
     expect(parse('a=b&a=c')).toEqual({ a: ['b', 'c'] });
-    
+
     expect(parse('a=b&c=d=')).toEqual({ a: 'b', c: 'd' });
     expect(parse('a=b&c=d==')).toEqual({ a: 'b', c: 'd' });
 
     expect(parse('a=%26')).toEqual({ a: '&' });
     expect(parse('%26=a')).toEqual({ '&': 'a' });
     expect(parse('%26[]=b&%26[]=c')).toEqual({ '&': ['b', 'c'] });
-        
+
     expect(parse('a[b]=c&a[d]=e')).toEqual({a: {b: 'c', d: 'e'}});
     expect(parse('a[b][c][d]=e')).toEqual({a: {b: {c: {d: 'e'}}}});
     expect(parse('a[b][]=c&a[b][]=d&a[b][2][]=f&a[b][2][]=g')).toEqual({a: {b: ['c','d', ['f', 'g']]}});
