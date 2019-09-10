@@ -70,7 +70,11 @@ System.register([], function (_export, _context) {
 
     for (var i = 0, ii = url1.length; i < ii; ++i) {
       if (url1[i] === '..') {
-        url3.pop();
+        if (url3.length && url3[url3.length - 1] !== '..') {
+          url3.pop();
+        } else {
+          url3.push(url1[i]);
+        }
       } else if (url1[i] === '.' || url1[i] === '') {
         continue;
       } else {
@@ -80,7 +84,11 @@ System.register([], function (_export, _context) {
 
     for (var _i = 0, _ii = url2.length; _i < _ii; ++_i) {
       if (url2[_i] === '..') {
-        url3.pop();
+        if (url3.length && url3[url3.length - 1] !== '..') {
+          url3.pop();
+        } else {
+          url3.push(url2[_i]);
+        }
       } else if (url2[_i] === '.' || url2[_i] === '') {
         continue;
       } else {
