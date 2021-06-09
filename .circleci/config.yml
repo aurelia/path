@@ -15,10 +15,19 @@ map-2: &filter_only_tag
 orbs:
   v1: aurelia/v1@volatile
 
+executors:
+  docker-circleci:
+    parameters:
+      node:
+        type: string
+        default: "15.4.0"
+    docker:
+      - image: "circleci/node:<< parameters.node >>-buster-browsers"
+
 workflows:
   main:
     jobs:
-      - v1/build_test
+      - v1/build_test:
           use_jspm: false
       - v1/build_merge:
           <<: *filter_only_develop
