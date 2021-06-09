@@ -1,4 +1,4 @@
 {
   "name": "aurelia-path",
-  "main": "dist/aurelia-path.d.ts"
+  "main": "dist/types/index.d.ts"
 }
