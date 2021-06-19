@@ -337,8 +337,20 @@ describe('query strings', () => {
     });
   });
 
-  it('does not pollute prototype', () => {
-    const path1 = '__proto__[asdf]=asdf';
-    assert.throws(() => parseQueryString(path1), 'Prototype pollution detected');
+  describe('prototype pollution', () => {
+    it('does not allow __proto__ in AccessKey assignment: "__proto__[asdf]=asdf"', () => {
+      const path1 = '__proto__[asdf]=asdf';
+      assert.throws(() => parseQueryString(path1), 'Prototype pollution detected');
+    });
+
+    it('does not attempt on AccessMember like key that has __proto__: "__proto__.asdf=asdf"', () => {
+      const path1 = '__proto__.asdf=asdf';
+      assert.doesNotThrow(() => parseQueryString(path1));
+    });
+
+    it('does not allow __proto__ in simple assignment: "__proto__=x&0[xxx]=xxx"', () => {
+      const path1 = '__proto__=x&0[xxx]=xxx';
+      assert.throws(() => parseQueryString(path1), 'Prototype pollution detected');
+    });
   });
 });

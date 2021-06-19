@@ -208,9 +208,7 @@ function parseComplexParam(queryParams: Object, keys: (string | number)[], value
   let keysLastIndex = keys.length - 1;
   for (let j = 0; j <= keysLastIndex; j++) {
     let key = keys[j] === '' ? (currentParams as any).length : keys[j];
-    if (key === '__proto__') {
-      throw new Error('Prototype pollution detected.');
-    }
+    preventPollution(key);
     if (j < keysLastIndex) {
       // The value has to be an array or a false value
       // It can happen that the value is no array if the key was repeated with traditional style like `list=1&list[]=2`
@@ -267,6 +265,7 @@ export function parseQueryString(queryString: string): Object {
       if (keysLastIndex) {
         parseComplexParam(queryParams, keys, value);
       } else {
+        preventPollution(key);
         queryParams[key] = processScalarParam(queryParams[key], value);
       }
     } else {
@@ -274,4 +273,10 @@ export function parseQueryString(queryString: string): Object {
     }
   }
   return queryParams;
+}
+
+function preventPollution(key: string) {
+  if (key === '__proto__') {
+    throw new Error('Prototype pollution detected.');
+  }
 }
