@@ -1,4 +1,3 @@
-
 function trimDots(ary: string[]): void {
   for (let i = 0; i < ary.length; ++i) {
     let part = ary[i];
@@ -159,7 +158,7 @@ function buildParam(key: string, value: any, traditional?: boolean): Array<strin
 * @param traditional Boolean Use the old URI template standard (RFC6570)
 * @returns The generated query string, excluding leading '?'.
 */
-export function buildQueryString(params: Object, traditional?: Boolean): string {
+export function buildQueryString(params?: Object, traditional?: boolean): string {
   let pairs = [];
   let keys = Object.keys(params || {}).sort();
   for (let i = 0, len = keys.length; i < len; i++) {
@@ -204,16 +203,17 @@ function processScalarParam(existedParam: Object, value: Object): Object {
 * @param keys Collection of keys related to this parameter.
 * @param value Parameter value to append.
 */
-function parseComplexParam(queryParams: Object, keys: Object, value: any): void {
+function parseComplexParam(queryParams: Object, keys: (string | number)[], value: any): void {
   let currentParams = queryParams;
   let keysLastIndex = keys.length - 1;
   for (let j = 0; j <= keysLastIndex; j++) {
-    let key = keys[j] === '' ? currentParams.length : keys[j];
+    let key = keys[j] === '' ? (currentParams as any).length : keys[j];
+    preventPollution(key);
     if (j < keysLastIndex) {
       // The value has to be an array or a false value
       // It can happen that the value is no array if the key was repeated with traditional style like `list=1&list[]=2`
       let prevValue = !currentParams[key] || typeof currentParams[key] === 'object' ? currentParams[key] : [currentParams[key]];
-      currentParams = currentParams[key] = prevValue || (isNaN(keys[j + 1]) ? {} : []);
+      currentParams = currentParams[key] = prevValue || (isNaN(keys[j + 1] as number) ? {} : []);
     } else {
       currentParams = currentParams[key] = value;
     }
@@ -265,6 +265,7 @@ export function parseQueryString(queryString: string): Object {
       if (keysLastIndex) {
         parseComplexParam(queryParams, keys, value);
       } else {
+        preventPollution(key);
         queryParams[key] = processScalarParam(queryParams[key], value);
       }
     } else {
@@ -272,4 +273,10 @@ export function parseQueryString(queryString: string): Object {
     }
   }
   return queryParams;
+}
+
+function preventPollution(key: string) {
+  if (key === '__proto__') {
+    throw new Error('Prototype pollution detected.');
+  }
 }
