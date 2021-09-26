@@ -154,9 +154,7 @@ System.register([], function (exports) {
                 var keysLastIndex = keys.length - 1;
                 for (var j = 0; j <= keysLastIndex; j++) {
                     var key = keys[j] === '' ? currentParams.length : keys[j];
-                    if (key === '__proto__') {
-                        throw new Error('Prototype pollution detected.');
-                    }
+                    preventPollution(key);
                     if (j < keysLastIndex) {
                         var prevValue = !currentParams[key] || typeof currentParams[key] === 'object' ? currentParams[key] : [currentParams[key]];
                         currentParams = currentParams[key] = prevValue || (isNaN(keys[j + 1]) ? {} : []);
@@ -198,6 +196,7 @@ System.register([], function (exports) {
                             parseComplexParam(queryParams, keys, value);
                         }
                         else {
+                            preventPollution(key);
                             queryParams[key] = processScalarParam(queryParams[key], value);
                         }
                     }
@@ -206,6 +205,11 @@ System.register([], function (exports) {
                     }
                 }
                 return queryParams;
+            }
+            function preventPollution(key) {
+                if (key === '__proto__') {
+                    throw new Error('Prototype pollution detected.');
+                }
             }
 
         }

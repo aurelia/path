@@ -1,3 +1,14 @@
+## <small>1.1.7 (2021-09-26)</small>
+
+* fix: security issue gh closes #44 ([7c4e235](https://github.com/aurelia/path/commit/7c4e235)), closes [#44](https://github.com/aurelia/path/issues/44)
+* fix(security): prevent proto pollution in simple assignment ([d3bb6fa](https://github.com/aurelia/path/commit/d3bb6fa))
+* chore(all): add latest build artifacts ([0624b03](https://github.com/aurelia/path/commit/0624b03))
+* chore(all): merge latest release ([ac538ac](https://github.com/aurelia/path/commit/ac538ac))
+* chore(all): update build process, deps ([4aa9088](https://github.com/aurelia/path/commit/4aa9088))
+* chore(ci): fix circleci yml ([a990648](https://github.com/aurelia/path/commit/a990648))
+
+
+
 <a name="1.1.6"></a>
 ## [1.1.6](https://github.com/aurelia/path/compare/1.1.2...1.1.6) (2019-10-15)
 
