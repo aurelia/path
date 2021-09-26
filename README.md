@@ -1,8 +1,8 @@
 # aurelia-path
 
 [![npm Version](https://img.shields.io/npm/v/aurelia-path.svg)](https://www.npmjs.com/package/aurelia-path)
-[![Join the chat at https://gitter.im/aurelia/discuss](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/aurelia/discuss?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![CircleCI](https://circleci.com/gh/aurelia/path.svg?style=shield)](https://circleci.com/gh/aurelia/path)
+[![Discord Chat](https://img.shields.io/discord/448698263508615178.svg)](https://discord.gg/RBtyM6u)
+[![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/aurelia/path)
 
 This library is part of the [Aurelia](http://www.aurelia.io/) platform and contains utilities for path manipulation.
 
