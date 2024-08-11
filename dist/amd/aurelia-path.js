@@ -1,4 +1,4 @@
-define(['exports'], function (exports) { 'use strict';
+define(['exports'], (function (exports) { 'use strict';
 
     function trimDots(ary) {
         for (var i = 0; i < ary.length; ++i) {
@@ -90,7 +90,8 @@ define(['exports'], function (exports) { 'use strict';
         return scheme + urlPrefix + url3.join('/') + trailingSlash;
     }
     var encode = encodeURIComponent;
-    var encodeKey = function (k) { return encode(k).replace('%24', '$'); };
+    var dollarSignRegex = /%24/g;
+    var encodeKey = function (k) { return encode(k).replace(dollarSignRegex, '$'); };
     function buildParam(key, value, traditional) {
         var result = [];
         if (value === null || value === undefined) {
@@ -99,7 +100,7 @@ define(['exports'], function (exports) { 'use strict';
         if (Array.isArray(value)) {
             for (var i = 0, l = value.length; i < l; i++) {
                 if (traditional) {
-                    result.push(encodeKey(key) + "=" + encode(value[i]));
+                    result.push("".concat(encodeKey(key), "=").concat(encode(value[i])));
                 }
                 else {
                     var arrayKey = key + '[' + (typeof value[i] === 'object' && value[i] !== null ? i : '') + ']';
@@ -113,7 +114,7 @@ define(['exports'], function (exports) { 'use strict';
             }
         }
         else {
-            result.push(encodeKey(key) + "=" + encode(value));
+            result.push("".concat(encodeKey(key), "=").concat(encode(value)));
         }
         return result;
     }
@@ -209,5 +210,5 @@ define(['exports'], function (exports) { 'use strict';
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-});
+}));
 //# sourceMappingURL=aurelia-path.js.map

@@ -1,7 +1,7 @@
-System.register([], function (exports) {
+System.register([], (function (exports) {
     'use strict';
     return {
-        execute: function () {
+        execute: (function () {
 
             exports({
                 buildQueryString: buildQueryString,
@@ -100,7 +100,8 @@ System.register([], function (exports) {
                 return scheme + urlPrefix + url3.join('/') + trailingSlash;
             }
             var encode = encodeURIComponent;
-            var encodeKey = function (k) { return encode(k).replace('%24', '$'); };
+            var dollarSignRegex = /%24/g;
+            var encodeKey = function (k) { return encode(k).replace(dollarSignRegex, '$'); };
             function buildParam(key, value, traditional) {
                 var result = [];
                 if (value === null || value === undefined) {
@@ -109,7 +110,7 @@ System.register([], function (exports) {
                 if (Array.isArray(value)) {
                     for (var i = 0, l = value.length; i < l; i++) {
                         if (traditional) {
-                            result.push(encodeKey(key) + "=" + encode(value[i]));
+                            result.push("".concat(encodeKey(key), "=").concat(encode(value[i])));
                         }
                         else {
                             var arrayKey = key + '[' + (typeof value[i] === 'object' && value[i] !== null ? i : '') + ']';
@@ -123,7 +124,7 @@ System.register([], function (exports) {
                     }
                 }
                 else {
-                    result.push(encodeKey(key) + "=" + encode(value));
+                    result.push("".concat(encodeKey(key), "=").concat(encode(value)));
                 }
                 return result;
             }
@@ -212,7 +213,7 @@ System.register([], function (exports) {
                 }
             }
 
-        }
+        })
     };
-});
+}));
 //# sourceMappingURL=aurelia-path.js.map

@@ -88,7 +88,8 @@ function join(path1, path2) {
     return scheme + urlPrefix + url3.join('/') + trailingSlash;
 }
 let encode = encodeURIComponent;
-let encodeKey = k => encode(k).replace('%24', '$');
+const dollarSignRegex = /%24/g;
+let encodeKey = k => encode(k).replace(dollarSignRegex, '$');
 function buildParam(key, value, traditional) {
     let result = [];
     if (value === null || value === undefined) {
