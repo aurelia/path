@@ -1,12 +1,11 @@
 // @ts-check
+import { defineConfig } from 'rollup';
 import typescript from '@rollup/plugin-typescript';
+import pkg from './package.json' with { type: 'json' };
 
-const name = require('./package.json').name;
+const { name } = pkg;
 
-/**
- * @type {import('rollup').RollupOptions[]}
- */
-const rollupOptions = [
+export default defineConfig([
   {
     input: 'src/index.ts',
     output: [
@@ -56,6 +55,4 @@ const rollupOptions = [
       })
     ]
   }
-];
-
-export default rollupOptions;
+]);

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": [],
     "target": "es2015",
     "module": "es2015",
     "experimentalDecorators": true,
@@ -7,7 +8,6 @@
     "moduleResolution": "node",
     "stripInternal": true,
     "preserveConstEnums": true,
-    "removeComments": true,
     "lib": ["es2015", "dom"]
   },
   "exclude": [
