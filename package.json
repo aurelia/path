@@ -20,14 +20,17 @@
     "url": "http://github.com/aurelia/path"
   },
   "scripts": {
+    "lint": "oxlint",
     "clean": "rimraf dist",
-    "test": "cross-env TS_NODE_PROJECT=\"tsconfig.test.json\" mocha --require ts-node/register test/*.spec.ts",
-    "build": "npm run clean && npm run rollup && npm run build:types",
-    "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir dist/types",
-    "doc": "typedoc --entryPoints src/index.ts --json doc/api.json",
-    "lint": "eslint ./src ./test --ext .ts,.tsx",
-    "rollup": "rollup -c",
-    "cut-release": "gulp prepare-release"
+    "test": "bun test --coverage",
+    "test:watch": "npm run test -- --watch",
+    "build": "npm run clean && npm run rollup && npm run build:dts",
+    "build:dts": "tsc --emitDeclarationOnly --declaration --declarationDir dist/types",
+    "doc": "typedoc --entryPoints src/index.ts --json doc/api.json --pretty false",
+    "rollup": "rollup -c --esModule",
+    "precut-release": "npm run test && npm run lint && npm run build",
+    "cut-release": "commit-and-tag-version -t \"\" -i doc/CHANGELOG.md --skip.commit --skip.tag",
+    "postcut-release": "npm run doc"
   },
   "files": [
     "dist",
@@ -37,36 +40,17 @@
     "README.md",
     "LICENSE"
   ],
-  "jspm": {
-    "registry": "npm",
-    "main": "aurelia-path",
-    "format": "amd",
-    "directories": {
-      "dist": "dist/amd"
-    }
-  },
   "devDependencies": {
-    "@rollup/plugin-typescript": "^8.2.1",
-    "@types/mocha": "^8.2.2",
-    "@typescript-eslint/eslint-plugin": "^4.26.1",
-    "@typescript-eslint/parser": "^4.26.1",
-    "cross-env": "^7.0.3",
-    "eslint": "^7.28.0",
-    "gulp": "^4.0.2",
-    "gulp-bump": "^3.2.0",
-    "gulp-conventional-changelog": "^2.0.35",
-    "gulp-util": "^3.0.8",
-    "mocha": "^9.0.0",
-    "require-dir": "^0.3.0",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.51.1",
-    "run-sequence": "^1.2.2",
-    "through2": "^2.0.1",
-    "ts-node": "^10.0.0",
-    "typedoc": "^0.20.36",
-    "typescript": "^4.2.4",
-    "vinyl": "^2.2.1",
-    "vinyl-paths": "^3.0.1",
-    "yargs": "^4.8.1"
+    "@rollup/plugin-typescript": "11.1.6",
+    "@types/bun": "1.1.6",
+    "bun": "1.1.22",
+    "commit-and-tag-version": "12.4.1",
+    "cross-env": "7.0.3",
+    "oxlint": "0.7.0",
+    "rimraf": "6.0.1",
+    "rollup": "4.20.0",
+    "typedoc": "0.26.5",
+    "typescript": "5.5.4",
+    "tslib": "2.6.3"
   }
 }

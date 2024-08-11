@@ -1,16 +1,5 @@
 import { relativeToFile, join, parseQueryString, buildQueryString } from '../src/index';
-import assert from 'assert';
-
-const expect = (input: any) => {
-  return {
-    toBe: (output: any) => {
-      assert.strictEqual(input, output);
-    },
-    toEqual: (output: any) => {
-      assert.deepStrictEqual(input, output)
-    }
-  }
-}
+import { expect, describe, it } from 'bun:test';
 
 describe('relativeToFile', () => {
   it('can make a dot path relative to a simple file', () => {
@@ -35,10 +24,10 @@ describe('relativeToFile', () => {
   });
 
   it('returns path if null file provided', () => {
-    const file = null;
+    const file: string | null = null;
     const path = 'module';
 
-    expect(relativeToFile(path, file)).toBe('module');
+    expect(relativeToFile(path, file!)).toBe('module');
   });
 
   it('returns path if empty file provided', () => {
@@ -156,7 +145,7 @@ describe('join', () => {
   });
 
   it('returns path2 if path1 null', () => {
-    const path1 = null;
+    const path1: string = null!;
     const path2 = 'two';
 
     expect(join(path1, path2)).toBe('two');
@@ -171,7 +160,7 @@ describe('join', () => {
 
   it('returns path1 if path2 null', () => {
     const path1 = 'one';
-    const path2 = null;
+    const path2: string = null!;
 
     expect(join(path1, path2)).toBe('one');
   });
@@ -340,17 +329,17 @@ describe('query strings', () => {
   describe('prototype pollution', () => {
     it('does not allow __proto__ in AccessKey assignment: "__proto__[asdf]=asdf"', () => {
       const path1 = '__proto__[asdf]=asdf';
-      assert.throws(() => parseQueryString(path1), 'Prototype pollution detected');
+      expect(() => parseQueryString(path1)).toThrow('Prototype pollution detected');
     });
 
     it('does not attempt on AccessMember like key that has __proto__: "__proto__.asdf=asdf"', () => {
       const path1 = '__proto__.asdf=asdf';
-      assert.doesNotThrow(() => parseQueryString(path1));
+      expect(() => parseQueryString(path1)).not.toThrow();;
     });
 
     it('does not allow __proto__ in simple assignment: "__proto__=x&0[xxx]=xxx"', () => {
       const path1 = '__proto__=x&0[xxx]=xxx';
-      assert.throws(() => parseQueryString(path1), 'Prototype pollution detected');
+      expect(() => parseQueryString(path1)).toThrow('Prototype pollution detected');
     });
   });
 });
