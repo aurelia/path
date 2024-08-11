@@ -268,7 +268,6 @@ describe('query strings', () => {
     { input: { a: '&' }, output: 'a=%26' },
     { input: { '&': 'a' }, output: '%26=a' },
     { input: { a: true }, output: 'a=true' },
-    { input: { '$test': true }, output: '$test=true' },
 
     { input: { obj: { a: 5, b: "str", c: false } }, output: 'obj%5Ba%5D=5&obj%5Bb%5D=str&obj%5Bc%5D=false' },
     { input: { obj: { a: 5, b: "str", c: false } }, traditional: true, output: 'obj=%5Bobject%20Object%5D' },
@@ -283,6 +282,23 @@ describe('query strings', () => {
   testCases.forEach(({ input, output, traditional }) => {
     it(`builds ${input instanceof Object ? JSON.stringify(input) : input} to "${output}"`, () => {
       expect(buildQueryString(input, traditional)).toBe(output);
+    });
+  });
+
+  describe('$ encoding', () => {
+    it('encodes $ in keys', () => {
+      const path1 = { $test: true };
+      expect(buildQueryString(path1)).toBe('$test=true');
+    });
+
+    it('encodes multiple $ in keys', () => {
+      const path1 = { $test$: true };
+      expect(buildQueryString(path1)).toBe('$test$=true');
+    });
+
+    it('encodes key with only $', () => {
+      const path1 = { $$$$$$: true };
+      expect(buildQueryString(path1)).toBe('$$$$$$=true');
     });
   });
 

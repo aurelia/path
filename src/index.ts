@@ -118,7 +118,7 @@ export function join(path1: string, path2: string): string {
 }
 
 let encode = encodeURIComponent;
-const dollarSignRegex: RegExp = new RegExp('%24', 'g');
+const dollarSignRegex: RegExp = /%24/g;
 let encodeKey = k => encode(k).replace(dollarSignRegex, '$');
 /**
 * Recursively builds part of query string for parameter.
