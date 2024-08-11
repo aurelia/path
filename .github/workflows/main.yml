@@ -11,4 +11,4 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
-      - run: npm cut-release
+      - run: npm run cut-release
