@@ -43,7 +43,7 @@
   "devDependencies": {
     "@rollup/plugin-typescript": "11.1.6",
     "@types/bun": "1.1.6",
-    "bun": "1.1.22",
+    "bun": "1.1.30",
     "commit-and-tag-version": "12.4.1",
     "cross-env": "7.0.3",
     "oxlint": "0.7.0",
